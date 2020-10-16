@@ -10,7 +10,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy_to_firebase_hosting:
+  lint_vue_app:
     runs-on: ubuntu-latest
     strategy:
       matrix:
