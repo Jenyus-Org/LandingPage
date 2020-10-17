@@ -68,18 +68,18 @@
       <template
         ><v-list nav>
           <v-list-item-group active-class="sidenav-link--active">
-            <v-list-item to="/">
+            <v-list-item :to="{ name: 'Home' }" exact>
               <v-list-item-icon>
                 <v-icon>mdi-home</v-icon>
               </v-list-item-icon>
-              <v-list-item-title>Home</v-list-item-title>
+              <v-list-item-title>{{ $t("home") }}</v-list-item-title>
             </v-list-item>
 
-            <v-list-item to="/about">
+            <v-list-item :to="{ name: 'About' }">
               <v-list-item-icon>
                 <v-icon>mdi-information-variant</v-icon>
               </v-list-item-icon>
-              <v-list-item-title>About</v-list-item-title>
+              <v-list-item-title>{{ $t("aboutUs") }}</v-list-item-title>
             </v-list-item>
           </v-list-item-group>
         </v-list></template
@@ -87,7 +87,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="px-0 py-0">
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -187,5 +187,10 @@ export default {
   .sidenav-link--active {
     color: white;
   }
+}
+
+.v-main__wrap,
+.container {
+  height: 100%;
 }
 </style>
