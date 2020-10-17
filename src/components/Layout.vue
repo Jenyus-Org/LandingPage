@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="#CC0033" elevate-on-scroll dark>
-      <router-link to="/" class="d-flex align-center">
+      <router-link :to="{ name: 'Home' }" class="d-flex align-center">
         <v-img
           alt="Jenyus Logo"
           class="shrink mr-2"
