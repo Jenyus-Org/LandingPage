@@ -23,6 +23,25 @@
 
       <v-spacer></v-spacer>
 
+      <v-menu left bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            {{ locale.toUpperCase() }}
+            <v-icon>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item
+            v-for="lang in languageArray"
+            :key="lang"
+            @click="changeLocale(lang)"
+          >
+            <v-list-item-title>{{ lang.toUpperCase() }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
     </v-app-bar>
 
@@ -117,9 +136,13 @@
 </template>
 
 <script>
+import { languages } from "@/plugins/i18n";
+import { mapActions, mapState } from "vuex";
+
 export default {
-  data() {
+  data: function () {
     return {
+      languageArray: languages,
       drawer: false,
       icons: [
         {
@@ -144,6 +167,12 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapState(["locale"]),
+  },
+  methods: {
+    ...mapActions(["changeLocale"]),
   },
   mounted() {
     this.$refs.nav.$el.addEventListener("click", () => (this.drawer = false));
