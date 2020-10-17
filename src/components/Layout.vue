@@ -189,7 +189,10 @@ export default {
   }
 }
 
-.v-main__wrap,
+.v-main {
+  align-items: stretch;
+}
+
 .container {
   height: 100%;
 }
