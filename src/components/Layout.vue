@@ -116,8 +116,10 @@
         </v-card-text>
 
         <v-card-text class="white--text pt-0">
-          IT solutions by IMS students with <v-icon>mdi-heart</v-icon> since
-          <strong>2020</strong>.
+          <i18n path="footerLine">
+            <v-icon>mdi-heart</v-icon>
+            <strong>2020</strong>
+          </i18n>
         </v-card-text>
 
         <v-divider></v-divider>
