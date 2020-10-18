@@ -194,6 +194,8 @@ export default {
 }
 
 .container {
-  height: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: stretch;
 }
 </style>
