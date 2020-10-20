@@ -98,6 +98,7 @@
         tile
         color="#CC0033"
         class="lighten-1 white--text text-center"
+        width="100%"
       >
         <v-card-text>
           <v-btn
@@ -115,20 +116,16 @@
         </v-card-text>
 
         <v-card-text class="white--text pt-0">
-          Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet.
-          Mauris cursus commodo interdum. Praesent ut risus eget metus luctus
-          accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim
-          a sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula
-          lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus
-          iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum
-          tempor vel ut orci. Orci varius natoque penatibus et magnis dis
-          parturient montes, nascetur ridiculus mus.
+          <i18n path="footerLine">
+            <v-icon>mdi-heart</v-icon>
+            <strong>2020</strong>
+          </i18n>
         </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>Jenyus Org</strong>
+          <strong>Jenyus Org</strong> © {{ new Date().getFullYear() }}
         </v-card-text>
       </v-card>
     </v-footer>
@@ -191,9 +188,5 @@ export default {
 
 .v-main {
   align-items: stretch;
-}
-
-.container {
-  height: 100%;
 }
 </style>

@@ -1,5 +1,9 @@
 {
   "home": "Startseite",
   "aboutUs": "Über uns",
-  "tagline": "Angepasste IT Lösungen für Ihr Unternehmen."
+  "tagline": "Massgeschneiderte IT Lösungen für Ihr Unternehmen.",
+  "footerLine": "IT Lösungen von IMS Schülern mit {0} seit {1}.",
+  "theTeam": "Das Team",
+  "ceo": "Mitgründer / Chief Executive Officer / Grafik Designer",
+  "cto": "Mitgründer / Chief Technical Officer / Hauptentwickler"
 }
