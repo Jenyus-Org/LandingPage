@@ -189,10 +189,4 @@ export default {
 .v-main {
   align-items: stretch;
 }
-
-.container {
-  min-height: 100%;
-  display: flex;
-  align-items: stretch;
-}
 </style>
