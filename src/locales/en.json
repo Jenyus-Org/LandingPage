@@ -2,5 +2,8 @@
   "home": "Home",
   "aboutUs": "About Us",
   "tagline": "Individual IT solutions for your brand.",
-  "footerLine": "IT solutions by IMS students with {0} since {1}."
+  "footerLine": "IT solutions by IMS students with {0} since {1}.",
+  "theTeam": "The Team",
+  "ceo": "Co-Founder / Chief Executive Officer / Graphic Designer",
+  "cto": "Co-Founder / Chief Technical Officer / Lead Developer"
 }
