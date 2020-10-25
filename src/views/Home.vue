@@ -19,34 +19,22 @@
         </div>
       </v-card>
     </transition>
-    <v-card flat tile class="fullscreen-card text-center py-4">
-      <v-card-title class="d-inline-block my-4 text-h3 font-weight-bold">
+    <v-card flat tile class="fullscreen-card py-4">
+      <v-card-title
+        class="d-inline-block my-4 text-h3 title pl-8 pb-8"
+        style="color: #514f50"
+      >
         {{ $t("theTeam") }}
       </v-card-title>
+
       <v-container>
         <v-row>
-          <v-col v-for="member in teamMembers" :key="member.name">
-            <v-card class="mx-auto member-card" max-width="434">
-              <v-row align="end" class="fill-height">
-                <v-col align-self="start" cols="12">
-                  <v-avatar class="profile" color="grey" size="164" rounded>
-                    <v-img :src="member.img"></v-img>
-                  </v-avatar>
-                </v-col>
-                <v-col class="py-0">
-                  <v-list-item color="rgba(0, 0, 0, .4)">
-                    <v-list-item-content>
-                      <v-list-item-title class="title">
-                        {{ member.name }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle>{{
-                        member.position
-                      }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-              </v-row>
-            </v-card>
+          <v-col
+            style="flex: 1; min-width: 450px"
+            v-for="member in teamMembers"
+            :key="member.name"
+          >
+            <team-card :member="member" />
           </v-col>
         </v-row>
       </v-container>
@@ -55,19 +43,36 @@
 </template>
 
 <script>
+import TeamCard from "../components/TeamCard";
+
 export default {
+  components: {
+    TeamCard,
+  },
   data() {
     return {
       teamMembers: [
         {
           name: "Dominik Berger",
           img: "/res/img/dominik.jpg",
-          position: this.$t("ceo"),
+          positions: [
+            { name: this.$t("ceo"), icon: "mdi-account" },
+            { name: this.$t("graphicDesigner"), icon: "mdi-brush" },
+          ],
+          badge: this.$t("cofounder"),
+          website: "doemuu.github.io",
+          likes: ["Vue", "C#", "ASP.NET Core"],
         },
         {
           name: "RaviAnand Mohabir",
           img: "/res/img/ravi_2_1_cropped_1.png",
-          position: this.$t("cto"),
+          positions: [
+            { name: this.$t("cto"), icon: "mdi-account" },
+            { name: this.$t("leadDeveloper"), icon: "mdi-laptop" },
+          ],
+          badge: this.$t("cofounder"),
+          website: "dan6erbond.github.io",
+          likes: ["React", "Vue", "Python"],
         },
       ],
     };
@@ -77,27 +82,21 @@ export default {
 
 <style lang="scss" scoped>
 .fullscreen-card {
-  height: calc(100vh - 64px);
+  min-height: calc(100vh - 64px);
 
   .jenyus-logo {
     max-width: 80%;
+  }
+
+  & > .title {
+    display: block;
+    width: 100%;
+    border-bottom: solid 1px #dee2e6;
   }
 }
 
 .v-card__title {
   word-break: normal;
-}
-
-.member-card {
-  .title {
-    color: #cc0033;
-  }
-
-  .profile {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    border-bottom: 3px solid #cc0033 !important;
-  }
 }
 
 .fade-enter-active,
@@ -110,7 +109,7 @@ export default {
 
 @media (max-width: 960px) {
   .fullscreen-card {
-    height: calc(100vh - 56px);
+    min-height: calc(100vh - 56px);
   }
 }
 
