@@ -181,8 +181,20 @@ export default {
 .v-navigation-drawer {
   background-color: #cc0033 !important;
 
-  .sidenav-link--active {
-    color: white;
+  .v-navigation-drawer__content {
+    text-align: center;
+
+    .v-list-item {
+      padding: 8px 56px 8px 8px;
+
+      .v-list-item__title {
+        font-size: 1.5rem;
+      }
+    }
+
+    .sidenav-link--active {
+      color: white;
+    }
   }
 }
 
