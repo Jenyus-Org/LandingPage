@@ -13,12 +13,11 @@ const Layout = ({ children }) => (
           "px-12",
           "flex",
           "justify-between",
-          "items-center",
           "max-w-screen-lg",
           "mx-auto",
         )}>
         <JenyusLogo className={clsx("h-36", "w-auto")} />
-        <div>
+        <div className={clsx("pt-4")}>
           <p className={clsx("font-title", "uppercase")}>About</p>
           <ul>
             <li>
@@ -39,7 +38,7 @@ const Layout = ({ children }) => (
             </li>
           </ul>
         </div>
-        <div>
+        <div className={clsx("pt-4")}>
           <p className={clsx("font-title", "uppercase")}>Contact Us</p>
           <a
             href="mailto:jenyusorg@gmail.com"
@@ -47,7 +46,7 @@ const Layout = ({ children }) => (
             jenyusorg@gmail.com
           </a>
         </div>
-        <div>
+        <div className={clsx("pt-4")}>
           <span>&#169; 2021, Jenyus Org</span>
         </div>
       </div>
