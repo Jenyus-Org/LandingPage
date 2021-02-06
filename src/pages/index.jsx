@@ -1,7 +1,8 @@
-import * as React from "react";
 import clsx from "clsx";
 import { graphql, Link, useStaticQuery } from "gatsby";
 import Img from "gatsby-image";
+import * as React from "react";
+import Layout from "../components/layout";
 
 // markup
 const IndexPage = () => {
@@ -34,7 +35,7 @@ const IndexPage = () => {
   );
 
   return (
-    <main>
+    <Layout>
       <title>Home</title>
       <section
         className={clsx(
@@ -160,7 +161,7 @@ const IndexPage = () => {
             <div className={clsx("my-auto")}></div>
             <div>
               <p>
-                Dominik is has written a dissertation on online marketing and
+                Dominik has written a dissertation on online marketing and
                 SEO. He is an avid React and C# developer and works on pretty
                 much any software idea that comes to his mind.
               </p>
@@ -215,7 +216,7 @@ const IndexPage = () => {
           </div>
         </div>
       </section>
-    </main>
+    </Layout>
   );
 };
 

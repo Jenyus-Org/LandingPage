@@ -1,3 +1,4 @@
+const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
@@ -9,6 +10,9 @@ module.exports = {
         sans: "Maven Pro",
         ...defaultTheme.fontFamily.sans,
         title: ["Russo One"],
+      },
+      colors: {
+        gray: colors.gray,
       },
     },
   },
