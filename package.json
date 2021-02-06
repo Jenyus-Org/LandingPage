@@ -2,10 +2,20 @@
   "name": "jenyus-org-landing-page",
   "version": "1.0.0",
   "private": true,
-  "description": "Jenyus Org Landing Page",
-  "author": "Dan6erbond",
+  "description": "Jenyus Org landing page built with Gatsby.",
+  "contributors": [
+    "Dominik Berger (https://doemuulive-56e78.web.app/)",
+    "RaviAnand Mohabir <moravrav@gmail.com> (https://ravianand.web.app)"
+  ],
   "keywords": [
-    "gatsby"
+    "switzerland",
+    "developer",
+    "full-stack",
+    "frontend",
+    "backend",
+    "react",
+    "nodejs",
+    "csharp"
   ],
   "scripts": {
     "develop": "gatsby develop",
