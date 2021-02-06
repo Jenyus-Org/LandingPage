@@ -1,56 +1,35 @@
 {
-  "name": "landing-page",
-  "version": "0.1.0",
+  "name": "jenyus-org-landing-page",
+  "version": "1.0.0",
   "private": true,
+  "description": "Jenyus Org Landing Page",
+  "author": "Dan6erbond",
+  "keywords": [
+    "gatsby"
+  ],
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11",
-    "vue-i18n": "^8.17.3",
-    "vue-router": "^3.2.0",
-    "vuetify": "^2.2.11",
-    "vuex": "^3.4.0",
-    "vuex-persistedstate": "^4.0.0-beta.1"
-  },
-  "devDependencies": {
-    "@intlify/vue-i18n-loader": "^1.0.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "sass": "^1.19.0",
-    "sass-loader": "^8.0.0",
-    "vue-cli-plugin-i18n": "~1.0.1",
-    "vue-cli-plugin-vuetify": "~2.0.7",
-    "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.3.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "@mdx-js/mdx": "^1.6.22",
+    "@mdx-js/react": "^1.6.22",
+    "gatsby": "^2.31.1",
+    "gatsby-image": "^2.11.0",
+    "gatsby-plugin-manifest": "^2.12.0",
+    "gatsby-plugin-mdx": "^1.10.0",
+    "gatsby-plugin-offline": "^3.10.0",
+    "gatsby-plugin-postcss": "^3.7.0",
+    "gatsby-plugin-react-helmet": "^3.10.0",
+    "gatsby-plugin-sharp": "^2.14.1",
+    "gatsby-source-filesystem": "^2.11.0",
+    "gatsby-transformer-sharp": "^2.12.0",
+    "postcss": "^8.2.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0"
+  }
 }
