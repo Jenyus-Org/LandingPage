@@ -13,7 +13,7 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_LANDING_PAGE_97297 }}"
           projectId: landing-page-97297
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
