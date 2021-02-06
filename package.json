@@ -20,9 +20,12 @@
   "scripts": {
     "develop": "gatsby develop",
     "start": "gatsby develop",
+    "prebuild": "npm run build:tailwind",
     "build": "gatsby build",
     "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "clean": "gatsby clean",
+    "lint": "eslint --fix",
+    "build:tailwind": "cross-env NODE_ENV=production postcss build src/styles/tailwind.css -o static/styles/tailwind.css"
   },
   "dependencies": {
     "@mdx-js/mdx": "^1.6.22",
@@ -41,5 +44,17 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^6.1.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "postcss-cli": "^8.3.1",
+    "prettier": "^2.2.1",
+    "tailwindcss": "^2.0.2"
   }
 }

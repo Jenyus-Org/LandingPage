@@ -23,3 +23,5 @@ pnpm-debug.log*
 
 # Firebase
 /.firebase
+
+static/styles/tailwind.css
