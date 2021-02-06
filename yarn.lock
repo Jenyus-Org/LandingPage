@@ -6281,6 +6281,16 @@ follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.2.tgz#dd73c8effc12728ba5cf4259d760ea5fb83e3147"
   integrity sha512-6mPTgLxYm3r6Bkkg0vNM0HTjfGrOEtsfbhagQvbxDEsEkpNhw582upBaoRZylzen6krEmxXJgt9Ju6HiI4O7BA==
 
+fontsource-maven-pro@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/fontsource-maven-pro/-/fontsource-maven-pro-4.0.0.tgz#c397a54c8cf56bac5c66a1a0058f3039e75296d7"
+  integrity sha512-TKpP1doKhgrvwpxNUW/+PJ5leqQe5dka1AodjVZJuIehYn8Ln0Iswcgi0x1yjNxE0CMHXvF6kArtBYzYLdxJYQ==
+
+fontsource-russo-one@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/fontsource-russo-one/-/fontsource-russo-one-4.0.0.tgz#117bc6c38f326d88f0e07adc41cde59bc2e082ae"
+  integrity sha512-SzusiIJx0NYmyclopztbbrl1G3tornJmbKlWTMHPWxrjyFumlvqoOGPCQ4O4d+RX8HFXs5LJr7SnqGjIxRVZvw==
+
 for-each@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.3.tgz#69b447e88a0a5d32c3e7084f3f1710034b21376e"
