@@ -1,6 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: "Jenyus Org Landing Page",
+    title: "Jenyus Org",
+    description: "Fullstack software firm looking to revolutionize education.",
   },
   plugins: [
     "gatsby-plugin-postcss",
@@ -10,6 +11,15 @@ module.exports = {
     {
       resolve: "gatsby-plugin-manifest",
       options: {
+        name: "Jenyus Org",
+        short_name: "Jenyus",
+        description:
+          "Fullstack software firm looking to revolutionize education.",
+        lang: "en",
+        start_url: "/",
+        background_color: "#F9FAFB",
+        theme_color: "#DC2626",
+        display: "minimal-ui",
         icon: "src/images/icon.png",
       },
     },
