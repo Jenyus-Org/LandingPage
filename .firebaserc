@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "landing-page-97297"
+  },
+  "targets": {
+    "landing-page-97297": {
+      "hosting": {
+        "main": [
+          "jenyus"
+        ]
+      }
+    }
   }
 }
