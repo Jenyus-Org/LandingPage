@@ -2,9 +2,11 @@ import clsx from "clsx";
 import { Link } from "gatsby";
 import * as React from "react";
 import JenyusLogo from "../assets/jenyus.inline.svg";
+import Navigation from "./navigation";
 
 const Layout = ({ children }) => (
   <React.Fragment>
+    <Navigation />
     <main>{children}</main>
     <footer className={clsx("bg-gray-900", "text-white")}>
       <div

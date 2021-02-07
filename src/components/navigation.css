@@ -1,0 +1,12 @@
+.menu-item:after {
+  display: block;
+  content: "";
+  height: 0.25rem;
+  background: linear-gradient(to bottom right, #1d4ed8, #f87171);
+  transition: width ease-in-out 250ms;
+  width: 0;
+}
+
+.menu-item:hover:after {
+  width: 100%;
+}
