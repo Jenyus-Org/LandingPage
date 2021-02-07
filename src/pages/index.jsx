@@ -87,7 +87,7 @@ const IndexPage = () => {
           <br />
           Founded by two graduates of the engineering college in Aarau, they aim
           to revolutionize processes in the education sector and provide
-          businesses with an involved process in creating modern software.
+          businesses with an involved approach to creating modern software.
           <br />
           <br />
           Need a website for your business, an internal management tool or have
