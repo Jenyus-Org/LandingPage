@@ -1,10 +1,10 @@
 import clsx from "clsx";
-import { graphql, Link, useStaticQuery } from "gatsby";
+import { graphql, useStaticQuery } from "gatsby";
 import Img from "gatsby-image";
 import * as React from "react";
+import AlteKantiAarauLogo from "../assets/alte_kanti_aarau_logo.inline.svg";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
-import AlteKantiAarauLogo from "../assets/alte_kanti_aarau_logo.inline.svg";
 
 const IndexPage = () => {
   const { laptopImg, dominikImg, raviImg } = useStaticQuery(
