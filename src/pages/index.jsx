@@ -104,6 +104,8 @@ const IndexPage = () => {
               "from-blue-700",
               "to-red-400",
               "transition-shadow",
+              "duration-200",
+              "ease-in-out",
               "hover:shadow-xl",
               "ring-4",
               "ring-transparent",
