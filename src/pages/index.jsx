@@ -97,7 +97,7 @@ const IndexPage = () => {
           have any other ideas?
         </p>
         <div className={clsx("text-center", "block")}>
-          <Link
+          <a
             className={clsx(
               "px-12",
               "py-6",
@@ -116,9 +116,9 @@ const IndexPage = () => {
               "text-white",
               "font-bold",
             )}
-            to="/contact">
+            href="mailto:jenyusorg@gmail.com">
             Contact Us
-          </Link>
+          </a>
         </div>
       </section>
       <section
