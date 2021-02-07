@@ -134,7 +134,7 @@ const IndexPage = () => {
       </section>
       <section
         className={clsx("px-8", "pt-4", "pb-8", "max-w-screen-xl", "mx-auto")}>
-        <h2 className={clsx("font-title", "text-4xl", "mb-4")}>As Used By</h2>
+        <h2 className={clsx("font-title", "text-4xl", "mb-4")}>As Trusted By</h2>
         <div className={clsx("flex", "flex-wrap")}>
           <div className={clsx("p-4", "h-32")}>
             <AlteKantiAarauLogo className={clsx("h-full", "w-auto")} />
