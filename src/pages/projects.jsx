@@ -23,15 +23,25 @@ const ProjectsPage = () => {
   return (
     <Layout>
       <SEO title="Projects" />
-      <div className={clsx("p-12", "mb-32", "max-w-screen-xl", "mx-auto")}>
-        <h1 className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-4")}>
-          Projects
-        </h1>
-        <p className={clsx("text-gray-400")}>
-          Take a look at some projects built by Jenyus to see what we're all
-          about.
-        </p>
-      </div>
+      <section
+        className={clsx(
+          "h-screen",
+          "max-w-screen-xl",
+          "mx-auto",
+          "flex",
+          "items-center",
+          "justify-center",
+        )}>
+        <div className={clsx("flex", "flex-col")}>
+          <h1 className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-4")}>
+            Projects
+          </h1>
+          <p className={clsx("text-gray-400")}>
+            Take a look at some projects built by Jenyus to see what we're all
+            about.
+          </p>
+        </div>
+      </section>
       <article
         className={clsx(
           "flex",
