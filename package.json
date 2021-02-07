@@ -1,56 +1,69 @@
 {
-  "name": "landing-page",
-  "version": "0.1.0",
+  "name": "jenyus-org-landing-page",
+  "version": "1.0.0",
   "private": true,
+  "description": "Jenyus Org landing page built with Gatsby.",
+  "contributors": [
+    "Dominik Berger (https://doemuulive-56e78.web.app/)",
+    "RaviAnand Mohabir <moravrav@gmail.com> (https://ravianand.web.app)"
+  ],
+  "keywords": [
+    "switzerland",
+    "developer",
+    "full-stack",
+    "frontend",
+    "backend",
+    "react",
+    "nodejs",
+    "csharp"
+  ],
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "prebuild": "npm run build:tailwind",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "lint": "eslint --fix",
+    "build:tailwind": "cross-env NODE_ENV=production postcss build src/styles/tailwind.css -o static/styles/tailwind.css"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11",
-    "vue-i18n": "^8.17.3",
-    "vue-router": "^3.2.0",
-    "vuetify": "^2.2.11",
-    "vuex": "^3.4.0",
-    "vuex-persistedstate": "^4.0.0-beta.1"
+    "@mdx-js/mdx": "^1.6.22",
+    "@mdx-js/react": "^1.6.22",
+    "@researchgate/react-intersection-observer": "^1.3.5",
+    "clsx": "^1.1.1",
+    "dotenv": "^8.2.0",
+    "fontsource-maven-pro": "^4.0.0",
+    "fontsource-russo-one": "^4.0.0",
+    "framer-motion": "^3.3.0",
+    "gatsby": "^2.31.1",
+    "gatsby-image": "^2.11.0",
+    "gatsby-plugin-manifest": "^2.12.0",
+    "gatsby-plugin-mdx": "^1.10.0",
+    "gatsby-plugin-offline": "^3.10.0",
+    "gatsby-plugin-postcss": "^3.7.0",
+    "gatsby-plugin-react-helmet": "^3.10.0",
+    "gatsby-plugin-react-svg": "^3.0.0",
+    "gatsby-plugin-sass": "^3.2.0",
+    "gatsby-plugin-sharp": "^2.14.1",
+    "gatsby-source-filesystem": "^2.11.0",
+    "gatsby-transformer-sharp": "^2.12.0",
+    "postcss": "^8.2.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0",
+    "sass": "^1.32.6"
   },
   "devDependencies": {
-    "@intlify/vue-i18n-loader": "^1.0.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "sass": "^1.19.0",
-    "sass-loader": "^8.0.0",
-    "vue-cli-plugin-i18n": "~1.0.1",
-    "vue-cli-plugin-vuetify": "~2.0.7",
-    "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.3.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "cross-env": "^7.0.3",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "postcss-cli": "^8.3.1",
+    "prettier": "^2.2.1",
+    "tailwindcss": "^2.0.2"
+  }
 }

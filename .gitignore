@@ -1,7 +1,6 @@
-.DS_Store
-node_modules
-/dist
-
+node_modules/
+.cache/
+public
 
 # local env files
 .env.local
@@ -24,3 +23,5 @@ pnpm-debug.log*
 
 # Firebase
 /.firebase
+
+static/styles/tailwind.css
