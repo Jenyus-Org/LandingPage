@@ -68,11 +68,20 @@ const Navigation = () => {
       <button
         onClick={toggleOpen}
         className={clsx(
-          "absolute",
+          "fixed",
           "top-10",
           "right-10",
           "focus:outline-none",
           "z-50",
+          "bg-white",
+          "rounded-full",
+          "flex",
+          "justify-center",
+          "items-center",
+          "pl-3",
+          "pt-3",
+          "pr-2",
+          "pb-2",
         )}>
         <svg width="45" height="45" viewBox="0 0 23 23">
           <Path
@@ -101,13 +110,17 @@ const Navigation = () => {
         className={clsx(
           "h-screen",
           "w-screen",
-          "absolute",
+          "fixed",
           "bg-white",
           "z-40",
           { "pointer-events-none": !isOpen },
           "flex",
           "items-center",
           "justify-center",
+          "top-0",
+          "right-0",
+          "left-0",
+          "bottom-0",
         )}
         variants={navigation}>
         <motion.ul
