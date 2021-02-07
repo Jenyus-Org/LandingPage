@@ -43,6 +43,8 @@ const IndexPage = () => {
           "items-stretch",
           "h-screen",
           "justify-between",
+          "flex-col",
+          "md:flex-row",
         )}>
         <div
           className={clsx(
@@ -161,9 +163,9 @@ const IndexPage = () => {
             <div className={clsx("my-auto")}></div>
             <div>
               <p>
-                Dominik has written a dissertation on online marketing and
-                SEO. He is an avid React and C# developer and works on pretty
-                much any software idea that comes to his mind.
+                Dominik has written a dissertation on online marketing and SEO.
+                He is an avid React and C# developer and works on pretty much
+                any software idea that comes to his mind.
               </p>
             </div>
           </div>
