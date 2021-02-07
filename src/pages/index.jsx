@@ -80,7 +80,7 @@ const IndexPage = () => {
         </div>
       </section>
       <section
-        className={clsx("px-8", "pt-10", "max-w-screen-lg", "mx-auto", "mb-8")}>
+        className={clsx("px-8", "pt-10", "max-w-screen-xl", "mx-auto", "mb-8")}>
         <h2 className={clsx("font-title", "text-4xl", "mb-2")}>
           About Jenyus Org
         </h2>
@@ -122,7 +122,7 @@ const IndexPage = () => {
         </div>
       </section>
       <section
-        className={clsx("px-8", "pt-4", "pb-8", "max-w-screen-lg", "mx-auto")}>
+        className={clsx("px-8", "pt-4", "pb-8", "max-w-screen-xl", "mx-auto")}>
         <h2 className={clsx("font-title", "text-4xl", "mb-4")}>As Used By</h2>
         <div className={clsx("flex", "flex-wrap")}>
           <div className={clsx("p-4", "h-32")}>
@@ -131,7 +131,7 @@ const IndexPage = () => {
         </div>
       </section>
       <section
-        className={clsx("px-8", "pt-4", "pb-8", "max-w-screen-lg", "mx-auto")}>
+        className={clsx("px-8", "pt-4", "pb-8", "max-w-screen-xl", "mx-auto")}>
         <h2 className={clsx("font-title", "text-4xl", "mb-4")}>
           Meet The Team
         </h2>
