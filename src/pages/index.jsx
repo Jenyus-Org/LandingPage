@@ -70,7 +70,8 @@ const IndexPage = () => {
             "p-8",
           )}>
           <div>
-            <h1 className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-1")}>
+            <h1
+              className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-1")}>
               Jenyus Org
             </h1>
             <hr className={clsx("border-2", "border-black", "mb-2")} />
