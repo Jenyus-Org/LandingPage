@@ -18,7 +18,9 @@ const Layout = ({ children }) => (
           "max-w-screen-lg",
           "mx-auto",
         )}>
-        <JenyusLogo className={clsx("h-36", "w-auto")} />
+        <Link to="/">
+          <JenyusLogo className={clsx("h-36", "w-auto")} />
+        </Link>
         <div className={clsx("pt-4")}>
           <p className={clsx("font-title", "uppercase")}>About</p>
           <ul>
