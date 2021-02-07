@@ -6,12 +6,19 @@ import Layout from "../components/layout";
 import SEO from "../components/seo";
 
 const ProjectsPage = () => {
-  const { spesenAppScreenshot } = useStaticQuery(
+  const { spesenAppScreenshot, recogLogo } = useStaticQuery(
     graphql`
       query ProjectsPageQuery {
         spesenAppScreenshot: file(relativePath: { eq: "spesen_app.png" }) {
           childImageSharp {
             fluid(maxHeight: 2560) {
+              ...GatsbyImageSharpFluid
+            }
+          }
+        }
+        recogLogo: file(relativePath: { eq: "recog.png" }) {
+          childImageSharp {
+            fluid(maxHeight: 600) {
               ...GatsbyImageSharpFluid
             }
           }
@@ -56,7 +63,6 @@ const ProjectsPage = () => {
           className={clsx(
             "flex-1",
             "flex",
-            "p-6",
             "justify-center",
             "items-center",
             "bg-gradient-to-br",
@@ -65,7 +71,7 @@ const ProjectsPage = () => {
             "h-full",
           )}>
           <Img
-            className={clsx("h-full", "md:h-3/4", "w-full")}
+            className={clsx("h-full", "md:h-3/4", "w-full", "m-6")}
             imgStyle={{ objectFit: "contain" }}
             fluid={spesenAppScreenshot?.childImageSharp.fluid}
           />
@@ -77,19 +83,66 @@ const ProjectsPage = () => {
             "flex-col",
             "items-center",
             "justify-center",
-            "p-8",
-            "md:p-16",
           )}>
-          <h2 className={clsx("text-2xl")}>Spesen App</h2>
-          <br />
-          <p>
-            Spesen App is a web app custom-built for the alte Kanti Aarau. By
-            leveraging the capabilities of modern single-page apps, and NodeJS
-            based webservers, teachers can make requests for vacation and
-            compensation through a mobile accessible website and view their
-            grants as well as other history directly using their active
-            directory logins.
-          </p>
+          <div className={clsx("p-8", "md:p-16")}>
+            <h2 className={clsx("text-2xl")}>Spesen App</h2>
+            <br />
+            <p>
+              Spesen App is a web app custom-built for the alte Kanti Aarau. By
+              leveraging the capabilities of modern single-page apps, and NodeJS
+              based webservers, teachers can make requests for vacation and
+              compensation through a mobile accessible website and view their
+              grants as well as other history directly using their active
+              directory logins.
+            </p>
+          </div>
+        </div>
+      </article>
+      <article
+        className={clsx(
+          "flex",
+          "flex-wrap",
+          "items-stretch",
+          "h-screen",
+          "justify-between",
+          "flex-col",
+          "md:flex-row",
+        )}>
+        <div
+          className={clsx(
+            "flex-1",
+            "flex",
+            "flex-col",
+            "items-center",
+            "justify-center",
+          )}>
+          <div className={clsx("p-8", "md:p-16")}>
+            <h2 className={clsx("text-2xl")}>Recog</h2>
+            <br />
+            <p>
+              Recog is a forum built in collaboration with the alte Kanti Aarau.
+              It aims to connect students and business acquaintances across
+              Switzerland with another and create a platform on which
+              collaboration and a modern take on education is effortless.
+            </p>
+          </div>
+        </div>
+        <div
+          className={clsx(
+            "flex-1",
+            "flex",
+            "justify-center",
+            "items-center",
+            "bg-gradient-to-br",
+            "from-blue-700",
+            "to-red-400",
+            "h-full",
+          )}>
+          <Img
+            className={clsx("h-full", "w-3/4", "md:w-1/2", "m-6")}
+            imgStyle={{ objectFit: "contain" }}
+            fluid={recogLogo?.childImageSharp.fluid}
+          />
         </div>
       </article>
     </Layout>
