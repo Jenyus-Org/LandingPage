@@ -85,16 +85,19 @@ const IndexPage = () => {
           About Jenyus Org
         </h2>
         <p className={clsx("mb-4")}>
-          Jenyus Org is a software development firm based in Switzerland.
+          Jenyus Org is a software development firm based in Lucerne,
+          Switzerland. The mission, to find, accelerate, and support talented,
+          and innovative people.
           <br />
           <br />
-          Founded by two graduates of the engineering college in Aarau, they aim
-          to revolutionize processes in the education sector and provide you
-          with an involved approach to creating modern software.
+          Founded in Aarau by two undergraduates of the computing college
+          Aarau/Baden, the company aims to provide a transparent and involved
+          approach to creating modern software.
           <br />
           <br />
-          Need a landing page for your business, an internal management tool or
-          have any other ideas?
+          Need a landing page for yourself or your business? An internal
+          management tool or do you have an innovative idea but not the means to
+          build up on it?
         </p>
         <div className={clsx("text-center", "block")}>
           <a
