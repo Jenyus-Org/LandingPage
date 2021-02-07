@@ -52,6 +52,7 @@ const ProjectsPage = () => {
             "bg-gradient-to-br",
             "from-blue-700",
             "to-red-400",
+            "h-full",
           )}>
           <Img
             className={clsx("h-full", "md:h-3/4", "w-full")}
