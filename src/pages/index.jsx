@@ -87,12 +87,12 @@ const IndexPage = () => {
           <br />
           <br />
           Founded by two graduates of the engineering college in Aarau, they aim
-          to revolutionize processes in the education sector and provide
-          businesses with an involved approach to creating modern software.
+          to revolutionize processes in the education sector and provide you
+          with an involved approach to creating modern software.
           <br />
           <br />
-          Need a website for your business, an internal management tool or have
-          any other ideas?
+          Need a landing page for your business, an internal management tool or
+          have any other ideas?
         </p>
         <div className={clsx("text-center", "block")}>
           <Link
