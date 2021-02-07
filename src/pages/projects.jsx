@@ -41,7 +41,7 @@ const ProjectsPage = () => {
           "items-center",
           "justify-center",
         )}>
-        <div className={clsx("flex", "flex-col")}>
+        <div className={clsx("flex", "flex-col", "p-4")}>
           <h1 className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-4")}>
             Projects
           </h1>
