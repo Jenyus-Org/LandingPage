@@ -3,8 +3,8 @@ import { graphql, Link, useStaticQuery } from "gatsby";
 import Img from "gatsby-image";
 import * as React from "react";
 import Layout from "../components/layout";
+import SEO from "../components/seo";
 
-// markup
 const IndexPage = () => {
   const { laptopImg, dominikImg, raviImg } = useStaticQuery(
     graphql`
@@ -36,7 +36,7 @@ const IndexPage = () => {
 
   return (
     <Layout>
-      <title>Home</title>
+      <SEO title="Home" />
       <section
         className={clsx(
           "flex",
