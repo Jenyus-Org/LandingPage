@@ -10,7 +10,7 @@ const IndexPage = () => {
   const { laptopImg, dominikImg, raviImg } = useStaticQuery(
     graphql`
       query IndexPageQuery {
-        laptopImg: file(relativePath: { eq: "laptop-splash.jpg" }) {
+        laptopImg: file(relativePath: { eq: "laptop_splash.jpg" }) {
           childImageSharp {
             fluid(maxHeight: 2560) {
               ...GatsbyImageSharpFluid
