@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 module.exports = {
   siteMetadata: {
     title: "Jenyus Org",
@@ -21,7 +23,7 @@ module.exports = {
         background_color: "#F9FAFB",
         theme_color: "#362C40",
         display: "minimal-ui",
-        icon: "src/images/icon.png",
+        icon: "src/images/jenyus.svg",
       },
     },
     "gatsby-plugin-mdx",
