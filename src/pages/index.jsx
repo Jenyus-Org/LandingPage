@@ -4,6 +4,7 @@ import Img from "gatsby-image";
 import * as React from "react";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
+import AlteKantiAarauLogo from "../assets/alte_kanti_aarau_logo.inline.svg";
 
 const IndexPage = () => {
   const { laptopImg, dominikImg, raviImg } = useStaticQuery(
@@ -116,6 +117,15 @@ const IndexPage = () => {
             to="/contact">
             Contact Us
           </Link>
+        </div>
+      </section>
+      <section
+        className={clsx("px-8", "pt-4", "pb-8", "max-w-screen-lg", "mx-auto")}>
+        <h2 className={clsx("font-title", "text-4xl", "mb-4")}>As Used By</h2>
+        <div className={clsx("flex", "flex-wrap")}>
+          <div className={clsx("p-4", "h-32")}>
+            <AlteKantiAarauLogo className={clsx("h-full", "w-auto")} />
+          </div>
         </div>
       </section>
       <section
