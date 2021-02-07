@@ -67,6 +67,7 @@ const IndexPage = () => {
             "flex-col",
             "items-center",
             "justify-center",
+            "p-8",
           )}>
           <div>
             <h1 className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-1")}>
