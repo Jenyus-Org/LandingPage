@@ -137,7 +137,9 @@ const Navigation = () => {
             variants={navItem}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}>
-            <Link to="/">Home</Link>
+            <Link onClick={toggleOpen} to="/">
+              Home
+            </Link>
           </motion.li>
           <motion.li
             className={clsx(
@@ -150,7 +152,9 @@ const Navigation = () => {
             variants={navItem}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}>
-            <Link to="/projects">Projects</Link>
+            <Link onClick={toggleOpen} to="/projects">
+              Projects
+            </Link>
           </motion.li>
           <motion.li
             className={clsx(
@@ -163,7 +167,9 @@ const Navigation = () => {
             variants={navItem}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}>
-            <Link to="/about-us">About Us</Link>
+            <Link onClick={toggleOpen} to="/about-us">
+              About Us
+            </Link>
           </motion.li>
           <motion.li
             className={clsx(
@@ -176,7 +182,9 @@ const Navigation = () => {
             variants={navItem}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}>
-            <Link to="/contact">Contact Us</Link>
+            <Link onClick={toggleOpen} to="/contact">
+              Contact Us
+            </Link>
           </motion.li>
           <motion.li
             className={clsx(
@@ -189,7 +197,9 @@ const Navigation = () => {
             variants={navItem}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}>
-            <Link to="/faq">FAQ</Link>
+            <Link onClick={toggleOpen} to="/faq">
+              FAQ
+            </Link>
           </motion.li>
         </motion.ul>
       </motion.div>
