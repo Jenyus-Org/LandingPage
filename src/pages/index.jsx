@@ -222,7 +222,8 @@ const IndexPage = () => {
             <div className={clsx("my-auto")}></div>
             <div>
               <p>
-                RaviAnand is an experienced developer, familiar with various
+                RaviAnand is an experienced developer and expert at software
+                architecture and design. He is familiar with various
                 technologies and can help bring your next software project to
                 life in a professional manner.
               </p>
