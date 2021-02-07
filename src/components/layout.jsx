@@ -12,6 +12,8 @@ const Layout = ({ children }) => (
           "py-8",
           "px-12",
           "flex",
+          "flex-col",
+          "md:flex-row",
           "justify-between",
           "max-w-screen-lg",
           "mx-auto",
