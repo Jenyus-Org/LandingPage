@@ -80,7 +80,15 @@ const IndexPage = () => {
         </div>
       </section>
       <section
-        className={clsx("px-8", "pt-10", "max-w-screen-xl", "mx-auto", "mb-8")}>
+        className={clsx(
+          "px-8",
+          "pt-10",
+          "md:mt-10",
+          "max-w-screen-xl",
+          "mx-auto",
+          "mb-8",
+          "md:mb-12",
+        )}>
         <h2 className={clsx("font-title", "text-4xl", "mb-2")}>
           About Jenyus Org
         </h2>
