@@ -257,7 +257,7 @@ const ProjectsPage = () => {
                 },
               }}>
               <Img
-                className={clsx("h-full", "w-3/4", "md:w-1/2", "m-6")}
+                className={clsx("h-3/4", "w-3/4", "md:w-1/2", "m-6")}
                 imgStyle={{ objectFit: "contain" }}
                 fluid={recogLogo?.childImageSharp.fluid}
               />
