@@ -5,6 +5,8 @@
  */
 
 // You can delete this file if you're not using it
+import "firebase/analytics";
+
 import "./src/styles/global.css";
 import "fontsource-russo-one";
 import "fontsource-maven-pro";
