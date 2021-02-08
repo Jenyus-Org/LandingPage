@@ -41,15 +41,53 @@ const ProjectsPage = () => {
           "items-center",
           "justify-center",
         )}>
-        <div className={clsx("flex", "flex-col", "p-4")}>
-          <h1 className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-4")}>
+        <motion.div
+          className={clsx("flex", "flex-col", "p-4")}
+          initial="hide"
+          animate="show"
+          transition={{ staggerChildren: 0.07 }}>
+          <motion.h1
+            className={clsx("font-title", "text-5xl", "md:text-6xl", "mb-4")}
+            variants={{
+              show: {
+                y: 0,
+                opacity: 1,
+                transition: {
+                  y: { stiffness: 1000, velocity: -100 },
+                },
+              },
+              hide: {
+                y: 50,
+                opacity: 0,
+                transition: {
+                  y: { stiffness: 1000 },
+                },
+              },
+            }}>
             Projects
-          </h1>
-          <p className={clsx("text-gray-400")}>
+          </motion.h1>
+          <motion.p
+            className={clsx("text-gray-400")}
+            variants={{
+              show: {
+                y: 0,
+                opacity: 1,
+                transition: {
+                  y: { stiffness: 1000, velocity: -100 },
+                },
+              },
+              hide: {
+                y: 50,
+                opacity: 0,
+                transition: {
+                  y: { stiffness: 1000 },
+                },
+              },
+            }}>
             Take a look at some projects built by Jenyus to see what we're all
             about.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </section>
       <ViewableMonitor threshold={0.25}>
         {(visible) => (
@@ -168,7 +206,7 @@ const ProjectsPage = () => {
               "items-stretch",
               "h-screen",
               "justify-between",
-              "flex-col",
+              "flex-col-reverse",
               "md:flex-row",
             )}
             initial={false}

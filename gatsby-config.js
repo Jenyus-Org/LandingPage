@@ -52,5 +52,20 @@ module.exports = {
         },
       },
     },
+    {
+      resolve: 'gatsby-plugin-firebase',
+      options: {
+        credentials: {
+          apiKey: "AIzaSyBZXQRLjcGXLKNS4oxp0PaOhEomQhXAvB4",
+          authDomain: "landing-page-97297.firebaseapp.com",
+          databaseURL: "https://landing-page-97297.firebaseio.com",
+          projectId: "landing-page-97297",
+          storageBucket: "landing-page-97297.appspot.com",
+          messagingSenderId: "377000971925",
+          appId: "1:377000971925:web:ba3223e69c716f2ab0d59c",
+          measurementId: "G-BGPCGEJ43D"
+        },
+      },
+    },
   ],
 };

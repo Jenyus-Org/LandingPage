@@ -69,8 +69,10 @@ const Navigation = () => {
         onClick={toggleOpen}
         className={clsx(
           "fixed",
-          "top-10",
-          "right-10",
+          "top-6",
+          "right-6",
+          "md:top-8",
+          "md:right-8",
           "focus:outline-none",
           "z-50",
           "bg-white",
@@ -78,12 +80,11 @@ const Navigation = () => {
           "flex",
           "justify-center",
           "items-center",
-          "pl-3",
-          "pt-3",
-          "pr-2",
-          "pb-2",
+          "p-2",
         )}>
-        <svg width="45" height="45" viewBox="0 0 23 23">
+        <svg
+          className={clsx("h-6", "w-6", "md:h-8", "md:w-8", "ml-1", "mt-1")}
+          viewBox="0 0 23 23">
           <Path
             variants={{
               closed: { d: "M 2 2.5 L 20 2.5" },
