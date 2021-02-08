@@ -168,7 +168,7 @@ const ProjectsPage = () => {
               "items-stretch",
               "h-screen",
               "justify-between",
-              "flex-col",
+              "flex-col-reverse",
               "md:flex-row",
             )}
             initial={false}
