@@ -75,8 +75,7 @@ const Navigation = () => {
           "z-50",
           "bg-black",
           "flex",
-          "p-2",
-          "md:p-3",
+          "p-3",
         )}>
         <svg
           className={clsx("h-6", "w-6", "md:h-8", "md:w-8", "ml-1", "mt-1")}
