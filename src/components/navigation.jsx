@@ -54,7 +54,7 @@ const Path = (props) => (
   <motion.path
     fill="transparent"
     strokeWidth="3"
-    stroke="hsl(0, 0%, 18%)"
+    stroke="#ffffff"
     strokeLinecap="round"
     {...props}
   />
@@ -69,18 +69,13 @@ const Navigation = () => {
         onClick={toggleOpen}
         className={clsx(
           "fixed",
-          "top-6",
-          "right-6",
-          "md:top-8",
-          "md:right-8",
+          "top-0",
+          "right-0",
           "focus:outline-none",
           "z-50",
-          "bg-white",
-          "rounded-full",
+          "bg-black",
           "flex",
-          "justify-center",
-          "items-center",
-          "p-2",
+          "p-3",
         )}>
         <svg
           className={clsx("h-6", "w-6", "md:h-8", "md:w-8", "ml-1", "mt-1")}
