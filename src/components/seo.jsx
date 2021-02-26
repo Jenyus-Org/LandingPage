@@ -1,17 +1,13 @@
-/**
- * SEO component that queries for data with
- *  Gatsby's useStaticQuery React hook
- *
- * See: https://www.gatsbyjs.org/docs/use-static-query/
- */
-
+import { useLocation } from "@reach/router";
 import { graphql, useStaticQuery } from "gatsby";
 import PropTypes from "prop-types";
 import React from "react";
 import Helmet from "react-helmet";
 import logo from "../images/jenyus.png";
 
-function SEO({ description, lang, meta, keywords, title, children }) {
+function SEO({ description, lang, meta, keywords, title, children, article }) {
+  const { pathname } = useLocation();
+
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -25,7 +21,11 @@ function SEO({ description, lang, meta, keywords, title, children }) {
     `,
   );
 
-  const metaDescription = description || site.siteMetadata.description;
+  const seo = {
+    title: title || site.siteMetadata.title,
+    description: description || site.siteMetadata.description,
+    image: logo,
+  };
 
   return (
     <Helmet
@@ -33,50 +33,26 @@ function SEO({ description, lang, meta, keywords, title, children }) {
         lang,
       }}
       title={title}
-      titleTemplate={`%s | ${site.siteMetadata.title}`}
-      meta={[
-        {
-          name: `description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:title`,
-          content: `${title} | ${site.siteMetadata.title}`,
-        },
-        {
-          property: "og:image",
-          content: logo,
-        },
-        {
-          property: `og:description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:type`,
-          content: `website`,
-        },
-        {
-          name: `twitter:card`,
-          content: `summary`,
-        },
-        {
-          name: `twitter:title`,
-          content: `${title} | ${site.siteMetadata.title}`,
-        },
-        {
-          name: `twitter:description`,
-          content: metaDescription,
-        },
-      ]
-        .concat(
-          keywords.length > 0
-            ? {
-                name: `keywords`,
-                content: keywords.join(`, `),
-              }
-            : [],
-        )
-        .concat(meta)}>
+      titleTemplate={`%s | ${site.siteMetadata.title}`}>
+      <meta name="description" content={seo.description} />
+      {seo.image && <meta name="image" content={seo.image} />}
+      <meta
+        property="og:title"
+        content={`${title} | ${site.siteMetadata.title}`}
+      />
+      {seo.image && <meta property="og:image" content={seo.image} />}
+      <meta property="og:description" content={seo.description} />
+      <meta property="og:type" content={article ? "article" : "website"} />
+      <meta property="twitter:card" content="summary" />
+      <meta
+        property="twitter:title"
+        content={`${seo.title} | ${site.siteMetadata.title}`}
+      />
+      <meta property="twitter:description" content={seo.description} />
+      {seo.image && <meta property="twitter:image" content={seo.image} />}
+      {keywords.length && (
+        <meta name="keywords" content={keywords.join(`, `)} />
+      )}
       {children}
     </Helmet>
   );
@@ -87,6 +63,7 @@ SEO.defaultProps = {
   meta: [],
   keywords: [],
   description: ``,
+  article: false,
 };
 
 SEO.propTypes = {
@@ -95,6 +72,7 @@ SEO.propTypes = {
   meta: PropTypes.arrayOf(PropTypes.object),
   keywords: PropTypes.arrayOf(PropTypes.string),
   title: PropTypes.string.isRequired,
+  article: PropTypes.bool,
 };
 
 export default SEO;
