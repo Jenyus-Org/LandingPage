@@ -149,7 +149,7 @@ const BlogIndex = ({ data }) => {
                 "transition-shadow",
                 "hover:shadow-lg",
               )}>
-              <div className={clsx("overflow-hidden", "mb-4")}>
+              <div className={clsx("overflow-hidden", "mb-4", "max-h-52")}>
                 <Img
                   className={clsx("object-contain")}
                   fluid={post.featuredImage.childImageSharp.fluid}
@@ -165,12 +165,30 @@ const BlogIndex = ({ data }) => {
                   "font-bold",
                   "text-lg",
                   "leading-6",
-                  "mb-2",
+                  "mb-1",
                   "text-red-500",
                 )}>
                 {post.title}
               </p>
-              <p className={clsx("text-gray-600")}>{post.description}</p>
+              <div className={clsx("flex", "mb-3")}>
+                {post.tags.map((tag) => (
+                  <div
+                    key={tag.name}
+                    className={clsx(
+                      "rounded-full",
+                      "px-1",
+                      "text-sm",
+                      "text-white",
+                      "mr-2",
+                    )}
+                    style={{ backgroundColor: tag.color }}>
+                    {tag.name}
+                  </div>
+                ))}
+              </div>
+              <p className={clsx("text-gray-600", "mt-auto")}>
+                {post.description}
+              </p>
             </Link>
           ))}
         </div>
