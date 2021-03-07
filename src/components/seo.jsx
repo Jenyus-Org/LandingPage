@@ -1,13 +1,10 @@
-import { useLocation } from "@reach/router";
 import { graphql, useStaticQuery } from "gatsby";
 import PropTypes from "prop-types";
 import React from "react";
 import Helmet from "react-helmet";
 import logo from "../images/jenyus.png";
 
-function SEO({ description, lang, meta, keywords, title, children, article }) {
-  const { pathname } = useLocation();
-
+function SEO({ description, lang, keywords, title, children, article }) {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -61,7 +58,6 @@ function SEO({ description, lang, meta, keywords, title, children, article }) {
 SEO.defaultProps = {
   lang: `en`,
   meta: [],
-  keywords: [],
   description: ``,
   article: false,
 };
@@ -69,7 +65,6 @@ SEO.defaultProps = {
 SEO.propTypes = {
   description: PropTypes.string,
   lang: PropTypes.string,
-  meta: PropTypes.arrayOf(PropTypes.object),
   keywords: PropTypes.arrayOf(PropTypes.string),
   title: PropTypes.string.isRequired,
   article: PropTypes.bool,
