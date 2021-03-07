@@ -42,6 +42,7 @@ const Template = ({ data }) => {
         title={frontmatter.title}
         description={frontmatter.description}
         article
+        image={frontmatter.featuredImage.childImageSharp.fixed.src}
       />
       <div
         className={clsx(
@@ -168,6 +169,9 @@ export const pageQuery = graphql`
           childImageSharp {
             fluid(maxWidth: 800) {
               ...GatsbyImageSharpFluid
+            }
+            fixed(width: 800) {
+              src
             }
           }
         }
