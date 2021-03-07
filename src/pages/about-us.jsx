@@ -6,7 +6,6 @@ const AboutPage = () => {
   return (
     <Layout>
       <SEO title="About Us" />
-      
     </Layout>
   );
 };
