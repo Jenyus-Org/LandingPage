@@ -149,7 +149,7 @@ const BlogIndex = ({ data }) => {
                 "transition-shadow",
                 "hover:shadow-lg",
               )}>
-              <div className={clsx("overflow-hidden", "mb-4", "max-h-52")}>
+              <div className={clsx("overflow-hidden", "mb-4", "h-52")}>
                 <Img
                   className={clsx("object-contain")}
                   fluid={post.featuredImage.childImageSharp.fluid}
@@ -213,22 +213,13 @@ export const pageQuery = graphql`
             date(formatString: "YYYY-MM-DD")
             featuredImage {
               childImageSharp {
-                fluid(maxWidth: 800) {
+                fluid(maxHeight: 350) {
                   ...GatsbyImageSharpFluid
                 }
               }
             }
             author {
               name
-              tagline
-              website
-              image {
-                childImageSharp {
-                  fluid(maxWidth: 400) {
-                    ...GatsbyImageSharpFluid
-                  }
-                }
-              }
             }
             tags {
               name
