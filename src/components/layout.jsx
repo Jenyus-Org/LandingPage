@@ -7,7 +7,7 @@ import Navigation from "./navigation";
 const Layout = ({ children }) => (
   <React.Fragment>
     <Navigation />
-    <main>{children}</main>
+    <main className={clsx("min-h-screen")}>{children}</main>
     <footer className={clsx("bg-gray-900", "text-white")}>
       <div
         className={clsx(

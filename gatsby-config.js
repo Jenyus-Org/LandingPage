@@ -11,6 +11,7 @@ module.exports = {
     "gatsby-plugin-sharp",
     "gatsby-plugin-react-helmet",
     "gatsby-plugin-offline",
+    "gatsby-plugin-mdx",
     {
       resolve: "gatsby-plugin-manifest",
       options: {
@@ -26,7 +27,6 @@ module.exports = {
         icon: "src/images/jenyus.svg",
       },
     },
-    "gatsby-plugin-mdx",
     "gatsby-transformer-sharp",
     {
       resolve: "gatsby-source-filesystem",
@@ -39,10 +39,50 @@ module.exports = {
     {
       resolve: "gatsby-source-filesystem",
       options: {
+        name: "images",
+        path: "./images/",
+      },
+      __key: "images",
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
         name: "pages",
         path: "./src/pages/",
       },
       __key: "pages",
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        name: "pages",
+        path: "./blog/",
+      },
+      __key: "pages",
+    },
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [".mdx", ".md"],
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-highlight-code`,
+            options: {
+              terminal: "carbon",
+              theme: "panda",
+            },
+          },
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1200,
+              showCaptions: ["alt", "title"],
+              // markdownCaptions: true,
+              wrapperStyle: `text-align: center;margin: 1rem 0;`,
+            },
+          },
+        ],
+      },
     },
     {
       resolve: "gatsby-plugin-react-svg",
@@ -53,7 +93,7 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-firebase',
+      resolve: "gatsby-plugin-firebase",
       options: {
         credentials: {
           apiKey: "AIzaSyBZXQRLjcGXLKNS4oxp0PaOhEomQhXAvB4",
@@ -63,7 +103,7 @@ module.exports = {
           storageBucket: "landing-page-97297.appspot.com",
           messagingSenderId: "377000971925",
           appId: "1:377000971925:web:ba3223e69c716f2ab0d59c",
-          measurementId: "G-BGPCGEJ43D"
+          measurementId: "G-BGPCGEJ43D",
         },
       },
     },

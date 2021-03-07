@@ -1,0 +1,274 @@
+---
+slug: nestjs-starter
+title: Setting up a Hybrid REST & GraphQL API with NestJS and MikroORM
+topic: Web Development
+description: Use the same scalable approach Jenyus Org uses to make your next API with the NestJS framework and one of the best Typescript ORMs available.
+date: 2021-03-07
+tags:
+  - name: graphql
+    color: purple
+  - name: nestjs
+    color: red
+author:
+  name: RaviAnand Mohabir
+  tagline: Jenyus CTO & GraphQL Enthusiast
+  website: https://ravianand.web.app/
+  image: ../src/images/ravi_2_1_cropped_1.png
+featuredImage: ../images/nestjs.png
+---
+
+While searching for a framework and toolkit to use, which would allow us to create scalable, high-performance APIs for modern web apps with realtime functionalities and the flexibility to create mobile clients as well as use modern stacks with GraphQL and NodeJS, we came across the [NestJS framework](https://nestjs.com/) and liked it so much, that we created two starter templates for it. One of which we will be using today to setup a hybrid REST and GraphQL API from scratch.
+
+# What is NestJS?
+
+NestJS is a lightweight abstraction over the ExpressJS and Fastify libraries. It offers many common features and design patterns built-in, such as dependency injection, as well as integrations with popular libraries for tasks like authentication, field validation and interceptors, and an MVC pattern using controllers and resolvers to create modular web APIs as you might be used to from other frameworks like **ASP.NET Core** and **Spring Boot**.
+
+NestJS is also built with Typescript in mind, which means it offers amazing type-safety and advanced ES6 features of Javascript out of the box.
+
+You can read more about NestJS on the [official website](https://nestjs.com/) and their [docs](https://docs.nestjs.com/).
+
+# Why NestJS?
+
+We defined a couple of requirements our server-side framework would have to fulfill in order for us to consider it as our main stack going forward.
+
+ - Architecture: Features such as dependency injection, middlewares and authorization need to be implemented in a way that is scalable. ExpressJS in particular lacks this aspect when it comes to structuring larger applications;
+ - Type-safety: We wanted to use a somewhat type-safe language, to make it easier to catch bugs during development and improve our workflow. This basically eliminated languages such as Javascript, PHP and Python;
+ - Documentation: A good framework is useless if we have to scour pages of StackOverflow threads to find out how to do certain things, so the framework needed to have a good foundation and community support;
+ - Hosting: ASP.NET Core would have been our first choice if it wasn't for the much higher demands for hosts, which might not be feasible for smaller projects.
+
+This is how we eventually settled on the NestJS framework. Both Jenyus' CTO, Dominik Berger, and myself enjoy putting together our own toolkit. NestJS offers a lot of flexibility when it comes to integration libraries for common tasks, like ORMs, authentication, authorization and validation.
+
+# Setting up the Boilerplate
+
+The NestJS boilerplate is available under the Jenyus Organization's GitHub profile. You can clone it using the `git` CLI:
+
+```bash
+git clone https://github.com/Jenyus-Org/nestjs-auth-graphql-mikroorm-starter.git
+```
+
+If you would like to use the boilerplate which uses TypeORM for database interactions, you can use the [TypeORM starter](https://github.com/Jenyus-Org/nestjs-auth-graphql-starter/) instead.
+
+Once the project has been cloned, we need to install the dependencies and setup a couple of files. We use Yarn so run the `yarn` command in the project director, and then create a `.env` file which we will use later:
+
+```bash
+cd nestjs-auth-graphql-mikroorm-starter
+yarn
+touch .env
+```
+
+The `.env` file for now just contains a key which the JWT library will use to encode JWT tokens. It can be any random string, just make sure its unique and you don't commit this file to version control.
+
+```env
+JWT_KEY=<your-jwt-key>
+```
+
+# Project Setup
+
+Now it's time to get into the codebase and go over the various libraries used to implement all the features a typical web API would offer. We'll start with the ORM, which connects our API to the database.
+
+## ORM
+
+ORMs, or object relational mappers, are libraries that simplify working with a relational or NoSQL database in our codebase. They can automatically resolve relations using `JOIN`s and nested SQL `SELECT`s, as well as map our database rows to more logical Javascript objects, or Typescript classes.
+
+Two of the most popular ORMs for Typescript users are [TypeORM](https://typeorm.io/) and [MikroORM](http://mikro-orm.io/). Both of them offer fantastic typing for querying and inserting/updating data, but TypeORM has accumulated some issues over the years and was mostly abandoned by its maintainer. MikroORM is the new kid on the block which boasts many similar features, which is why for future Jenyus projects we have decided to go with it. [Recog](https://github.com/Jenyus-Org/recog-api) still uses TypeORM.
+
+MikroORM comes with a lot of features, and a very well-made NestJS integration that basically acts as a drop-in for TypeORM. In order to make the CLI aware of the database connection, you need to setup a `mikro-orm.config.ts` file in the `src/` folder. The starter comes with an example file `mikro-orm.config.example.ts`, which is configured for SQLite. You can copy it and make modifications as you see fit.
+
+```ts
+const logger = new Logger("MikroORM");
+const config = {
+  type: "sqlite",
+  dbName: "./tmp/data.sqlite",
+  entities: ["./dist/**/*.entity.js"],
+  entitiesTs: ["./src/**/*.entity.ts"],
+  debug: true,
+  highlighter: new SqlHighlighter(),
+  migrations: {
+    path: "./src/database/migrations",
+  },
+  logger: logger.log.bind(logger),
+} as Options;
+
+export default config;
+```
+
+You can read more about how MikroORM's CLI works [here](https://mikro-orm.io/docs/installation#setting-up-the-commandline-tool).
+
+### Entities
+
+Now it's time to setup some entities. Entities are Typescript classes, decorated with MikroORM `@Entity()` decorators that reflect database tables and columns. MikroORM supports one-to-many as well as many-to-many relationships, and comes with other features one might expect from an ORM.
+
+The starter samples a forum-like application, where one user has many posts. The entity in `src/users/entities/user.entity.ts` includes properties for authentication, such as `username` and `password`, which we will get back to later, as well as the profile data and posts relationship:
+
+```ts
+@Entity({ tableName: "users" })
+export class User {
+  @PrimaryKey()
+  id: number;
+
+  @Property()
+  username: string;
+
+  @Property()
+  password: string;
+
+  @Property({ nullable: true })
+  firstName: string;
+
+  @Property({ nullable: true })
+  lastName: string;
+
+  @OneToMany(() => Post, (post) => post.author, { cascade: [Cascade.REMOVE] })
+  posts = new Collection<Post>(this);
+
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user, {
+    cascade: [Cascade.REMOVE],
+  })
+  refreshTokens = new Collection<RefreshToken>(this);
+
+  @Property()
+  createdAt: Date = new Date();
+
+  @Property({ onUpdate: () => new Date() })
+  updatedAt: Date = new Date();
+}
+```
+
+You can read more about defining MikroORM entities [here](https://mikro-orm.io/docs/defining-entities).
+
+## Authentication
+
+```ts
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(
+    configService: ConfigService,
+    private usersService: UsersService,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>("auth.jwtKey"),
+      signOptions: { expiresIn: "15m" },
+    });
+  }
+
+  async validate(payload: any) {
+    const { sub: id } = payload;
+    const user = await this.usersService.findOne({ id });
+    return user;
+  }
+}
+```
+
+```ts
+@Injectable()
+export class JwtAuthGuard extends AuthGuard("jwt") {}
+```
+
+```ts
+export const CurrentUser = createParamDecorator<
+  unknown,
+  ExecutionContext,
+  User
+>((_, ctx) => {
+  const request = ctx.switchToHttp().getRequest();
+  return request.user;
+});
+```
+
+### GraphQL
+
+```ts
+@Injectable()
+export class GqlAuthGuard extends AuthGuard("jwt") {
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    return ctx.getContext().req;
+  }
+}
+```
+
+```ts
+export const GqlCurrentUser = createParamDecorator<
+  unknown,
+  ExecutionContext,
+  User
+>((_, context) => {
+  const ctx = GqlExecutionContext.create(context);
+  return ctx.getContext().req.user;
+});
+```
+
+## REST API
+
+```ts
+@Exclude()
+export class UserDto {
+  constructor(
+    partial: Pick<User, "id" | "username" | "firstName" | "lastName">,
+  ) {
+    Object.assign(this, partial);
+  }
+
+  @Expose()
+  @ApiProperty()
+  readonly id: string;
+
+  @Expose()
+  @ApiProperty()
+  readonly username: string;
+
+  @Expose()
+  @ApiProperty()
+  readonly firstName: string;
+
+  @Expose()
+  @ApiProperty()
+  readonly lastName: string;
+}
+```
+
+```ts
+export class UpdateUserDto {
+  @ApiProperty()
+  readonly username?: string;
+
+  @ApiProperty()
+  readonly firstName?: string;
+
+  @ApiProperty()
+  readonly lastName?: string;
+}
+```
+
+## GraphQL
+
+```ts
+@ObjectType("User")
+export class UserObject {
+  @Field(() => Int)
+  readonly id: number;
+
+  @Field()
+  readonly username: string;
+
+  @Field({ nullable: true })
+  readonly firstName: string;
+
+  @Field({ nullable: true })
+  readonly lastName: string;
+}
+```
+
+```ts
+@InputType()
+export class UpdateUserInput extends IntersectionType(
+  PickType(UserObject, ["id"] as const, InputType),
+  PartialType(OmitType(UserObject, ["id"] as const, InputType)),
+) {}
+```
+
+# Closing Words
+
+🚧 Work in Progress!
