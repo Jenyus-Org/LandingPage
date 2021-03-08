@@ -4,7 +4,8 @@ import { graphql, Link } from "gatsby";
 import Img from "gatsby-image";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import * as React from "react";
-import { BsChevronDoubleLeft } from "react-icons/bs";
+import { BsChevronDoubleLeft, BsLink45Deg } from "react-icons/bs";
+import { FaFacebook, FaLinkedin, FaReddit, FaTwitter } from "react-icons/fa";
 import { FiExternalLink, FiShare2 } from "react-icons/fi";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
@@ -18,14 +19,18 @@ const Template = ({ data }) => {
   } = data;
 
   const [canShare, setCanShare] = React.useState(false);
+
   const title = React.useMemo(
     () => encodeURIComponent(frontmatter.title + " | " + siteMetadata.title),
     [frontmatter, siteMetadata],
   );
-  const url = React.useMemo(() => `${siteMetadata.url}${pathname}`, [
+
+  const url = React.useMemo(() => `${siteMetadata.siteUrl}${pathname}`, [
     siteMetadata,
     pathname,
   ]);
+
+  const encodedUrl = React.useMemo(() => encodeURIComponent(url), [url]);
 
   const share = React.useCallback(() => {
     navigator.share({
@@ -138,19 +143,68 @@ const Template = ({ data }) => {
               <FiShare2 />
             </button>
           ) : (
-            <a
-              className={clsx(
-                "hover:text-red-400",
-                "transition-colors",
-                "flex",
-                "items-center",
-              )}
-              href={`https://hyperlinkr.netlify.app/?url=${url}&title=${title}`}
-              target="_blank"
-              rel="noopener noreferrer">
-              <span className={clsx("mr-2")}>Share Post</span>
-              <FiShare2 />
-            </a>
+            <div className={clsx("flex", "items-center")}>
+              <span className={clsx("mr-3")}>Share</span>
+              <a
+                className={clsx(
+                  "hover:text-red-500",
+                  "transition-colors",
+                  "mr-3",
+                  "text-2xl",
+                )}
+                href={`https://reddit.com/submit/?url=${encodedUrl}&title=${title}&resubmit=true`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <FaReddit />
+              </a>
+              <a
+                className={clsx(
+                  "hover:text-red-500",
+                  "transition-colors",
+                  "mr-3",
+                  "text-2xl",
+                )}
+                href={`https://twitter.com/intent/tweet/?url=${encodedUrl}&text=${title}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <FaTwitter />
+              </a>
+              <a
+                className={clsx(
+                  "hover:text-red-500",
+                  "transition-colors",
+                  "mr-3",
+                  "text-2xl",
+                )}
+                href={`https://www.linkedin.com/shareArticle/?mini=true&url=${url}&title=${title}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <FaLinkedin />
+              </a>
+              <a
+                className={clsx(
+                  "hover:text-red-500",
+                  "transition-colors",
+                  "mr-3",
+                  "text-2xl",
+                )}
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <FaFacebook />
+              </a>
+              <a
+                className={clsx(
+                  "hover:text-red-500",
+                  "tra3sition-colors",
+                  "text-2xl",
+                )}
+                href={`https://hyperlinkr.netlify.app/?url=${encodedUrl}&title=${title}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <BsLink45Deg />
+              </a>
+            </div>
           )}
         </div>
         <article itemScope itemType="http://schema.org/Article">
