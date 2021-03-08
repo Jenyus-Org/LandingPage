@@ -127,7 +127,12 @@ const Template = ({ data }) => {
         <div className={clsx("mb-4")}>
           {canShare ? (
             <button
-              className={clsx("hover:text-red-400", "transition-colors")}
+              className={clsx(
+                "hover:text-red-400",
+                "transition-colors",
+                "flex",
+                "items-center",
+              )}
               onClick={share}>
               <span className={clsx("mr-2")}>Share Post</span>
               <FiShare2 />
