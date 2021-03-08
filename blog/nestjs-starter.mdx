@@ -5,10 +5,10 @@ topic: Web Development
 description: Use the same scalable approach Jenyus Org uses to make your next API with the NestJS framework and one of the best Typescript ORMs available.
 date: 2021-03-07
 tags:
-  - name: graphql
-    color: purple
-  - name: nestjs
-    color: red
+  - name: GraphQL
+    color: "#DE33A6"
+  - name: NestJS
+    color: "#E1234E"
 author:
   name: RaviAnand Mohabir
   tagline: Jenyus CTO & GraphQL Enthusiast
@@ -31,12 +31,12 @@ You can read more about NestJS on the [official website](https://nestjs.com/) an
 
 We defined a couple of requirements our server-side framework would have to fulfill in order for us to consider it as our main stack going forward.
 
- - Architecture: Features such as dependency injection, middlewares and authorization need to be implemented in a way that is scalable. ExpressJS in particular lacks this aspect when it comes to structuring larger applications;
- - Type-safety: We wanted to use a somewhat type-safe language, to make it easier to catch bugs during development and improve our workflow. This basically eliminated languages such as Javascript, PHP and Python;
- - Documentation: A good framework is useless if we have to scour pages of StackOverflow threads to find out how to do certain things, so the framework needed to have a good foundation and community support;
- - Hosting: ASP.NET Core would have been our first choice if it wasn't for the much higher demands for hosts, which might not be feasible for smaller projects.
+- Architecture: Features such as dependency injection, middlewares and authorization need to be implemented in a way that is scalable. ExpressJS in particular lacks this aspect when it comes to structuring larger applications;
+- Type-safety: We wanted to use a somewhat type-safe language, to make it easier to catch bugs during development and improve our workflow. This basically eliminated languages such as Javascript, PHP and Python;
+- Documentation: A good framework is useless if we have to scour pages of StackOverflow threads to find out how to do certain things, so the framework needed to have a good foundation and community support;
+- Hosting: ASP.NET Core would have been our first choice if it wasn't for the much higher demands for hosts, which might not be feasible for smaller projects.
 
-This is how we eventually settled on the NestJS framework. Both Jenyus' CTO, Dominik Berger, and myself enjoy putting together our own toolkit. NestJS offers a lot of flexibility when it comes to integration libraries for common tasks, like ORMs, authentication, authorization and validation.
+This is how we eventually settled on the NestJS framework. Both Jenyus' CEO, Dominik Berger, and myself enjoy putting together our own toolkit. NestJS offers a lot of flexibility when it comes to integration libraries for common tasks, like ORMs, authentication, authorization and validation.
 
 # Setting up the Boilerplate
 
@@ -65,6 +65,8 @@ JWT_KEY=<your-jwt-key>
 # Project Setup
 
 Now it's time to get into the codebase and go over the various libraries used to implement all the features a typical web API would offer. We'll start with the ORM, which connects our API to the database.
+
+After you've setup the ORM you can run `yarn start:dev` to start the project, and then access the Swagger docs at [`localhost:3000/api`](localhost:3000/api) or the GraphQL Playground at [`localhost:3000/graphql`](localhost:3000/graphql).
 
 ## ORM
 
@@ -98,7 +100,7 @@ You can read more about how MikroORM's CLI works [here](https://mikro-orm.io/doc
 
 Now it's time to setup some entities. Entities are Typescript classes, decorated with MikroORM `@Entity()` decorators that reflect database tables and columns. MikroORM supports one-to-many as well as many-to-many relationships, and comes with other features one might expect from an ORM.
 
-The starter samples a forum-like application, where one user has many posts. The entity in `src/users/entities/user.entity.ts` includes properties for authentication, such as `username` and `password`, which we will get back to later, as well as the profile data and posts relationship:
+The starter samples a forum-like application, where one user has many posts. The user entity in `src/users/entities/user.entity.ts` includes properties for authentication, such as `username` and `password`, which we will get back to later, as well as the profile data and posts relationship:
 
 ```ts
 @Entity({ tableName: "users" })
@@ -136,7 +138,126 @@ export class User {
 
 You can read more about defining MikroORM entities [here](https://mikro-orm.io/docs/defining-entities).
 
+Other entities that are defined in this starter are `RefreshToken` and `Post`, which can be found under the `auth` and `posts` modules respectively.
+
 ## Authentication
+
+We have decided to handle authentication using JWT with a standard refresh token and access token based flow. In order to make our APIs compatible with various forms of client that may not support cookies, we simply return these tokens in our response bodies, and delegate the responsibility of keeping these tokens safe to our clients.
+
+NestJS has great guides on implementing JWT token based authentication in their [docs](https://docs.nestjs.com/security/authentication), we followed that approach and added refresh tokens on top.
+
+For our REST API we use the PassportJS local auth strategy to validate a user logging in for the first time with their username and password combination. This is used by the `/api/auth/login` route to return the reusable JWT token only if the user has been verified. The configuration can be found in `src/auth/strategies/local.strategy.ts`:
+
+```ts
+@Injectable()
+export class LocalStrategy extends PassportStrategy(Strategy) {
+  constructor(private authService: AuthService) {
+    super();
+  }
+
+  async validate(username: string, password: string) {
+    const user = await this.authService.validateUser(username, password);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    return user;
+  }
+}
+```
+
+`LocalStrategy` calls the `authService.validateUser()` method, which itself uses the `UsersService` to retrieve a user by their username and then uses BCrypt to compare the hashed passwords. If they match, it returns the user, otherwise `null`.
+
+As I alluded to before, I use this strategy in the `AuthController`'s `login` method to verify the user and generate tokens.
+
+`src/auth/auth.controller.ts`:
+
+```ts
+@Controller("auth")
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @UseGuards(LocalAuthGuard)
+  @Post("login")
+  @ApiBody({ type: LoginUserBody })
+  @ApiOkResponse({
+    description: "User has been logged in.",
+    type: LoginUserResponse,
+  })
+  async login(@Request() req) {
+    const accessToken = await this.authService.generateAccessToken(req.user);
+    const refreshToken = await this.authService.generateRefreshToken(
+      req.user,
+      60 * 60 * 24 * 30,
+    );
+
+    const payload = new LoginUserResponse();
+    payload.user = new UserDto(req.user);
+    payload.accessToken = accessToken;
+    payload.refreshToken = refreshToken;
+
+    return payload;
+  }
+}
+```
+
+The equivalent is possible in GraphQL, with the `login` mutation.
+
+`src/auth/auth.resolver.ts`:
+
+```ts
+@Resolver()
+export class AuthResolver {
+  constructor(private authService: AuthService) {}
+
+  @Mutation(() => LoginUserPayload)
+  async login(@Args("input") input: LoginUserInput) {
+    const user = await this.authService.validateUser(
+      input.username,
+      input.password,
+    );
+
+    if (!user) {
+      return new UserInputError("Username or password incorrect.");
+    }
+
+    const accessToken = await this.authService.generateAccessToken(user);
+    const refreshToken = await this.authService.generateRefreshToken(
+      user,
+      60 * 60 * 24 * 30,
+    );
+
+    const payload = new LoginUserPayload();
+    payload.user = user;
+    payload.accessToken = accessToken;
+    payload.refreshToken = refreshToken;
+
+    return payload;
+  }
+}
+```
+
+Since PassportJS has no strategies like the one we used earlier in REST for GraphQL, we simply created a `LoginUserInput` model, which expects the `username` and `password`, and then verifies those manually using the `authService` (this is also the only place where we duplicate code 😉).
+
+`src/auth/dto/login-user.input.ts`:
+
+```ts
+@InputType()
+export class LoginUserInput {
+  @Field()
+  username: string;
+
+  @Field()
+  password: string;
+}
+```
+
+### Guards
+
+To protect subsequent routes and queries, we need to use guards. In order to implement guards, we need to retrieve the user from each request using the access token first. For that we can use the JWT strategy from PassportJS, which follows a similar interface to the PassportJS local strategy, but instead of validating our username and password combination, we simply validate the JWT bearer token passed in the HTTP headers.
+
+The JWT strategy validates our JWT bearer token, and then uses the information we stored in it in our `AuthService` to retrieve our user by ID from the database, allowing us to check roles and permissions in the future.
+
+`src/auth/strategies/jwt.strategy.ts`:
 
 ```ts
 @Injectable()
@@ -161,10 +282,40 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 }
 ```
 
+After this we can implement the actual guard. NestJS provides an `AuthGuard` that expects the name of the strategy we defined earlier to protect routes. In this case `jwt`.
+
+`src/auth/guards/jwt-auth.guard.ts`:
+
 ```ts
 @Injectable()
 export class JwtAuthGuard extends AuthGuard("jwt") {}
 ```
+
+As seen earlier in the `AuthController`, routes can be protected by decorating them with `@UseGuards(LocalAuthGuard)`. Most routes will use the `JwtAuthGuard`, though, since a client expects to be able to authenticate the user with just the access token.
+
+### GraphQL
+
+In order to protect GraphQL queries and mutations, we need to create a separate guard that lets NestJS access the actual request, since the GraphQL implementation has to modify our request context in order to store additional information.
+
+`src/auth/guards/gql-auth.guard.ts`:
+
+```ts
+@Injectable()
+export class GqlAuthGuard extends AuthGuard("jwt") {
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    return ctx.getContext().req;
+  }
+}
+```
+
+## REST API
+
+Now we get to the fun part, implementing actual CRUD functionality into our app using the entities and authentication middleware we setup previously. We're going to implement a simple `PUT /api/users/profile` route which lets the user update their own profile.
+
+In order to make it a little easier to access the user from our request context, instead of directly accessing `request.user`, we're going to create a NestJS `ParamDecorator` that returns the user for us.
+
+`src/auth/decorators/current-user.decorator.ts`:
 
 ```ts
 export const CurrentUser = createParamDecorator<
@@ -177,30 +328,11 @@ export const CurrentUser = createParamDecorator<
 });
 ```
 
-### GraphQL
+Now we can use this decorator in whichever controller methods we need to get the database user and check their roles, permissions, etc.
 
-```ts
-@Injectable()
-export class GqlAuthGuard extends AuthGuard("jwt") {
-  getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req;
-  }
-}
-```
+Next it's time to create some DTOs. DTOs, or data transfer objects, are interfaces and classes that help us define what a client needs to send to our API and what we return. This separates the database entity from our APIs schema, which makes it easier to add computed values, and hide fields we might not want to show publicly, such as the `password` in the case of a `User`.
 
-```ts
-export const GqlCurrentUser = createParamDecorator<
-  unknown,
-  ExecutionContext,
-  User
->((_, context) => {
-  const ctx = GqlExecutionContext.create(context);
-  return ctx.getContext().req.user;
-});
-```
-
-## REST API
+`src/users/dto/update-user.dto.ts`:
 
 ```ts
 @Exclude()
@@ -229,6 +361,12 @@ export class UserDto {
 }
 ```
 
+As you can see, we use the `class-transformer` library's `@Exclude()` and `@Expose()` decorators to hide all fields assigned to this object by default, and only expose those we actually want to show. I do it this way in order to maintain the best possible security standards for our application as otherwise `Object.assign()` in our constructor will assign all the values, which will then be displayed in our request's return values.
+
+Also for the values our users will pass us we use DTOs. This has two benefits, it informs OpenAPI docs of all the properties that we expect, and it gives us better type-hints in our controllers than if we simply accepted objects of the `any` type.
+
+`src/users/dto/update-user.dto.ts`:
+
 ```ts
 export class UpdateUserDto {
   @ApiProperty()
@@ -242,7 +380,49 @@ export class UpdateUserDto {
 }
 ```
 
+Now lastly, to allow the user to update their profile we need to implement the controller method. It expects an `UpdateUserDto` and returns a `UserDto`. We pass that information to the OpenAPI decorator, so Swagger docs can display those in the frontend, and also use them as types to get type-hinting in our controllers and services.
+
+`src/users/users.controller.ts`:
+
+```ts
+@Controller("users")
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Put("profile")
+  async update(
+    @CurrentUser() user: User,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const res = await this.usersService.update(user.id, updateUserDto);
+    return res && new UserDto(res);
+  }
+}
+```
+
 ## GraphQL
+
+The GraphQL implementation of this same functionality is even easier. We're going to be creating a `updateProfile` mutation, that takes a `UpdateUserInput` input type, but first, just like before, let's make it a little easier for us to get the user from the request context.
+
+`src/auth/decorators/gql-current-user.decorator.ts`:
+
+```ts
+export const GqlCurrentUser = createParamDecorator<
+  unknown,
+  ExecutionContext,
+  User
+>((_, context) => {
+  const ctx = GqlExecutionContext.create(context);
+  return ctx.getContext().req.user;
+});
+```
+
+Now it's time for our DTOs. For our projects we use the code-first approach to generate GraphQL object and input types. You can read more about how NestJS handles GraphQL schema generation [here](https://docs.nestjs.com/graphql/quick-start), but we've decided to use code-first as it reduces the amount of code duplication we have, and foregoes the need for a generator script that converts our schema into interfaces for type-hinting.
+
+Just like before, we won't be mixing entities and GraphQL objects, so we're creating a separate `UserObject` with NestJS's code-first approach. You can read more about it [here](https://docs.nestjs.com/graphql/quick-start#code-first).
+
+`src/users/dto/user.object.ts`:
 
 ```ts
 @ObjectType("User")
@@ -261,6 +441,10 @@ export class UserObject {
 }
 ```
 
+Defining the update input type is way easier in GraphQL, as the input type basically follows the same structure as the `UserObject`, we can use NestJS's [mapped types](https://docs.nestjs.com/graphql/mapped-types) to easily make the ID a required type, while all other types are optional.
+
+`src/users/dto/update-user.input.ts`:
+
 ```ts
 @InputType()
 export class UpdateUserInput extends IntersectionType(
@@ -269,6 +453,106 @@ export class UpdateUserInput extends IntersectionType(
 ) {}
 ```
 
+Then, in our resolver, we define the `updateProfile` mutation, which uses the DTOs we just defined for type-hinting and schema-generation.
+
+`src/users/users.resolver.ts`:
+
+```ts
+@Resolver(() => UserObject)
+export class UsersResolver {
+  constructor(
+    private readonly usersService: UsersService,
+    private postsService: PostsService,
+  ) {}
+
+  @Mutation(() => UserObject)
+  updateProfile(@Args("input") input: UpdateUserInput) {
+    return this.usersService.update(input.id, input);
+  }
+}
+```
+
+### Optimizing Relations using GraphQL-Utils
+
+GraphQL implements some very unique functionality which REST does not offer: Requesting relationships in the same query as the root object. Say we have a user, which owns a list of posts. In REST this would require a separate request to the `/api/posts` endpoint, but in GraphQL we can retrieve this data all in a single request using the following query:
+
+```gql
+{
+  users {
+    id
+    username
+    firstName
+    lastName
+    posts {
+      id
+      title
+      body
+    }
+  }
+}
+```
+
+The user's posts are resolved using field resolvers. You can read more about how NestJS handles GraphQL code-first resolvers [here](https://docs.nestjs.com/graphql/resolvers#code-first-resolver).
+
+Essentially, the `users` query returns a list of users, and then GraphQL calls the user's `posts` field resolver, with the resolved user as the `parent` argument in order for us to return the posts from the database that belong to the given user. You can read more about GraphQL's execution flow [here](https://graphql.org/learn/execution/) and the arguments that are passed to resolvers [here](https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-arguments).
+
+**Jenyus Org** has published a NPM library for NestJS called [nestjs-graphql-utils](https://www.npmjs.com/package/@jenyus-org/nestjs-graphql-utils) which lets us use declarative syntax and NestJS `ParamDecorator`s to determine whether we should already fetch the user's posts in our original SQL query to improve performance. By doing so we reduce latency and thus speed up queries wherever possible. The implementation is also very straightforward using an ORM like MikroORM, since it's capable of populating relationship collections automatically using dot-notation.
+
+`src/users/users.resolver.ts`:
+
+```ts
+@Resolver(() => UserObject)
+export class UsersResolver {
+  constructor(
+    private readonly usersService: UsersService,
+    private postsService: PostsService,
+  ) {}
+
+  @Query(() => [UserObject])
+  users(@Selections("users", ["posts"]) relations: string[]) {
+    return this.usersService.findAll({ relations });
+  }
+
+  @ResolveField(() => [PostObject])
+  async posts(@Parent() user: User) {
+    if (user.posts.isInitialized()) {
+      return user.posts;
+    }
+    const { id } = user;
+    return this.postsService.findAll({ authorId: id });
+  }
+}
+```
+
+In our `users` query we use the `@Selections()` decorator from `@jenyus-org/nestjs-graphql-utils` to check which fields were selected and directly store them in an array. This array is passed to our `UsersService` which relays that information to MikroORM.
+
+We still need to implement the `User.posts` field resolver, though. MikroORM lets us check if a collection has been populated, which is useful since an empty collection is still technically initialized. You can read more about MikroORM collections [here](https://mikro-orm.io/docs/collections). If the collection wasn't initialized by previous resolvers, we can use the `PostsService` to fetch them after the fact and in the best case simply return the initialized collection.
+
+`src/users/users.service.ts`:
+
+```ts
+interface FindAllArgs {
+  relations?: string[];
+}
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: EntityRepository<User>,
+  ) {}
+
+  findAll(args?: FindAllArgs) {
+    const { relations } = args;
+    return this.usersRepository.find({}, relations);
+  }
+}
+```
+
+I wrote more about this technique of pre-fetching required relations in my personal blog, using a more barebones implementation of GraphQL and the `graphql-utils` package by **Jenyus Org** [here](https://ravianand.web.app/blog/graphql-utils).
+
 # Closing Words
 
-🚧 Work in Progress!
+NestJS gives us the best of Typescript and Javascript, while offering many useful features and built-in integrations to handle common use-cases.
+
+The Jenyus starter template bundles all those in a properly architectured structure and can be used as a boilerplate for hybrid REST and GraphQL APIs, or just support one! The choice is up to you.
