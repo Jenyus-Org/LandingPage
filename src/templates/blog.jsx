@@ -159,7 +159,7 @@ const Template = ({ data }) => {
               </a>
               <a
                 className={clsx(
-                  "hover:text-red-500",
+                  "hover:text-blue-500",
                   "transition-colors",
                   "mr-3",
                   "text-2xl",
@@ -171,7 +171,7 @@ const Template = ({ data }) => {
               </a>
               <a
                 className={clsx(
-                  "hover:text-red-500",
+                  "hover:text-blue-500",
                   "transition-colors",
                   "mr-3",
                   "text-2xl",
@@ -183,7 +183,7 @@ const Template = ({ data }) => {
               </a>
               <a
                 className={clsx(
-                  "hover:text-red-500",
+                  "hover:text-blue-500",
                   "transition-colors",
                   "mr-3",
                   "text-2xl",
@@ -195,8 +195,8 @@ const Template = ({ data }) => {
               </a>
               <a
                 className={clsx(
-                  "hover:text-red-500",
-                  "tra3sition-colors",
+                  "hover:text-green-500",
+                  "transition-colors",
                   "text-2xl",
                 )}
                 href={`https://hyperlinkr.netlify.app/?url=${encodedUrl}&title=${title}`}
