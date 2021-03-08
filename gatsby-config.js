@@ -4,6 +4,7 @@ module.exports = {
   siteMetadata: {
     title: "Jenyus Org",
     description: "Fullstack software firm looking to revolutionize education.",
+    siteUrl: "http://jenyus.web.app",
   },
   plugins: [
     "gatsby-plugin-postcss",

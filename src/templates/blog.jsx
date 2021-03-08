@@ -1,3 +1,4 @@
+import { useLocation } from "@reach/router";
 import clsx from "clsx";
 import { graphql, Link } from "gatsby";
 import Img from "gatsby-image";
@@ -9,6 +10,8 @@ import Layout from "../components/layout";
 import SEO from "../components/seo";
 
 const Template = ({ data }) => {
+  const { pathname } = useLocation();
+
   const {
     mdx: { frontmatter, body },
     site: { siteMetadata },
@@ -19,8 +22,9 @@ const Template = ({ data }) => {
     () => encodeURIComponent(frontmatter.title + " | " + siteMetadata.title),
     [frontmatter, siteMetadata],
   );
-  const url = React.useMemo(() => (window ? window.location.href : ""), [
-    window,
+  const url = React.useMemo(() => `${siteMetadata.url}${pathname}`, [
+    siteMetadata,
+    pathname,
   ]);
 
   const share = React.useCallback(() => {
@@ -136,7 +140,7 @@ const Template = ({ data }) => {
                 "flex",
                 "items-center",
               )}
-              href={`https://hyperlinkr.netlify.app/?url=${window.location.href}&title=${title}`}
+              href={`https://hyperlinkr.netlify.app/?url=${url}&title=${title}`}
               target="_blank"
               rel="noopener noreferrer">
               <span className={clsx("mr-2")}>Share Post</span>
@@ -197,6 +201,7 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         title
+        siteUrl
       }
     }
   }
