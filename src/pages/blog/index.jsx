@@ -55,7 +55,14 @@ const BlogIndex = ({ data }) => {
         </h1>
       </div>
       <div
-        className={clsx("px-4", "md:px-8", "flex", "flex-col", "md:flex-row")}>
+        className={clsx(
+          "px-4",
+          "md:px-8",
+          "flex",
+          "flex-col",
+          "md:flex-row",
+          "mb-6",
+        )}>
         <div
           className={clsx(
             "flex",
@@ -109,13 +116,15 @@ const BlogIndex = ({ data }) => {
                     "py-1",
                     "px-2",
                     "transition-colors",
-                    "hover:bg-red-200",
                     "cursor-pointer",
                     "focus:outline-none",
                     "whitespace-nowrap",
                     "mr-2",
                     "mb-2",
-                    topicFilter.indexOf(topic) === -1 && ["text-red-500"],
+                    topicFilter.indexOf(topic) === -1 && [
+                      "text-red-500",
+                      "hover:bg-red-200",
+                    ],
                     topicFilter.indexOf(topic) !== -1 && [
                       "bg-red-500",
                       "text-white",
