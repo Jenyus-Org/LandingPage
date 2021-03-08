@@ -7,7 +7,7 @@ import Navigation from "./navigation";
 const Layout = ({ children }) => (
   <React.Fragment>
     <Navigation />
-    <main>{children}</main>
+    <main className={clsx("min-h-screen")}>{children}</main>
     <footer className={clsx("bg-gray-900", "text-white")}>
       <div
         className={clsx(
@@ -24,22 +24,16 @@ const Layout = ({ children }) => (
           <JenyusLogo className={clsx("h-36", "w-auto")} />
         </Link>
         <div className={clsx("pt-4")}>
-          <p className={clsx("font-title", "uppercase")}>About</p>
+          <p className={clsx("font-title", "uppercase")}>Sitemap</p>
           <ul>
             <li>
               <Link to="/projects" className={clsx("hover:underline")}>
                 Projects
               </Link>
             </li>
-
             <li>
-              <Link to="/about-us" className={clsx("hover:underline")}>
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/faq" className={clsx("hover:underline")}>
-                FAQ
+              <Link to="/blog" className={clsx("hover:underline")}>
+                Blog
               </Link>
             </li>
           </ul>
