@@ -67,7 +67,7 @@ JWT_KEY=<your-jwt-key>
 
 Now it's time to get into the codebase and go over the various libraries used to implement all the features a typical web API would offer. We'll start with the ORM, which connects our API to the database.
 
-After you've setup the ORM you can run `yarn start:dev` to start the project, and then access the Swagger docs at [`localhost:3000/api`](localhost:3000/api) or the GraphQL Playground at [`localhost:3000/graphql`](localhost:3000/graphql).
+**Tip:** After you've setup the ORM you can run `yarn start:dev` to start the project, and then access the Swagger docs at [`localhost:3000/api`](localhost:3000/api) or the GraphQL Playground at [`localhost:3000/graphql`](localhost:3000/graphql).
 
 ## ORM
 
@@ -101,7 +101,9 @@ You can read more about how MikroORM's CLI works [here](https://mikro-orm.io/doc
 
 Now it's time to setup some entities. Entities are Typescript classes, decorated with MikroORM `@Entity()` decorators that reflect database tables and columns. MikroORM supports one-to-many as well as many-to-many relationships, and comes with other features one might expect from an ORM.
 
-The starter samples a forum-like application, where one user has many posts. The user entity in `src/users/entities/user.entity.ts` includes properties for authentication, such as `username` and `password`, which we will get back to later, as well as the profile data and posts relationship:
+The starter samples a forum-like application, where one user has many posts. The user entity we defined includes properties for authentication, such as `username` and `password`, which we will get back to later, as well as the profile data and posts relationship.
+
+`src/users/entities/user.entity.ts`:
 
 ```ts
 @Entity({ tableName: "users" })
@@ -143,7 +145,7 @@ Other entities that are defined in this starter are `RefreshToken` and `Post`, w
 
 ## Authentication
 
-We have decided to handle authentication using JWT with a standard refresh token and access token based flow. In order to make our APIs compatible with various forms of client that may not support cookies, we simply return these tokens in our response bodies, and delegate the responsibility of keeping these tokens safe to our clients.
+We have decided to handle authentication using JWT with a standard refresh token and access token based flow. In order to make our APIs compatible with different kinds of clients that may not support cookies, we simply return these tokens in our response bodies, and delegate the responsibility of keeping these tokens safe to our clients.
 
 NestJS has great guides on implementing JWT token based authentication in their [docs](https://docs.nestjs.com/security/authentication), we followed that approach and added refresh tokens on top.
 
@@ -168,7 +170,19 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
 `LocalStrategy` calls the `authService.validateUser()` method, which itself uses the `UsersService` to retrieve a user by their username and then uses BCrypt to compare the hashed passwords. If they match, it returns the user, otherwise `null`.
 
-As I alluded to before, I use this strategy in the `AuthController`'s `login` method to verify the user and generate tokens.
+As I alluded to before, I use this strategy in the `AuthController`'s `login` method to verify the user and generate tokens. We need to create a guard that NestJS will use, to make sure the route handler is only called if the request body contains the correct username and password combination.
+
+`src/auth/guards/local-auth.guard.ts`:
+
+```ts
+import { Injectable } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+
+@Injectable()
+export class LocalAuthGuard extends AuthGuard("local") {}
+```
+
+Afterwards we can decorate our controller method with `@UseGuards(LocalAuthGuard)` and generate our access and refresh tokens.
 
 `src/auth/auth.controller.ts`:
 
@@ -254,7 +268,7 @@ export class LoginUserInput {
 
 ### Guards
 
-To protect subsequent routes and queries, we need to use guards. In order to implement guards, we need to retrieve the user from each request using the access token first. For that we can use the JWT strategy from PassportJS, which follows a similar interface to the PassportJS local strategy, but instead of validating our username and password combination, we simply validate the JWT bearer token passed in the HTTP headers.
+To protect subsequent routes and queries, we can use guards just like did before. First we need to use the JWT strategy from PassportJS, which follows a similar interface to the PassportJS local strategy to retrieve a user based on the bearer token passed in the authorization headers.
 
 The JWT strategy validates our JWT bearer token, and then uses the information we stored in it in our `AuthService` to retrieve our user by ID from the database, allowing us to check roles and permissions in the future.
 
@@ -331,7 +345,7 @@ export const CurrentUser = createParamDecorator<
 
 Now we can use this decorator in whichever controller methods we need to get the database user and check their roles, permissions, etc.
 
-Next it's time to create some DTOs. DTOs, or data transfer objects, are interfaces and classes that help us define what a client needs to send to our API and what we return. This separates the database entity from our APIs schema, which makes it easier to add computed values, and hide fields we might not want to show publicly, such as the `password` in the case of a `User`.
+Next it's time to create some DTOs. DTOs, or *data transfer objects*, are interfaces and classes that help us define what a client needs to send to our API and what we return. This separates the database entity from our APIs schema, which makes it easier to add computed values, and hide fields we might not want to show publicly, such as the `password` in the case of a `User`.
 
 `src/users/dto/update-user.dto.ts`:
 
