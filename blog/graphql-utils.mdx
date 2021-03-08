@@ -16,17 +16,37 @@ author:
 featuredImage: ../images/graphql.png
 ---
 
-A couple of weeks ago I wrote about the Jenyus `graphql-utils` package on my [personal blog](https://ravianand.web.app/blog/graphql-utils), showing how we could leverage the GraphQL AST to optimize relational queries and avoid dataloaders entirely. Today we're going to look at how Jenyus uses the `nestjs-graphql-utils` package we built on top of it to create scalable and performant APIs such as the one used in [Recog](https://github.com/Jenyus-Org/recog-api/).
+A couple of weeks ago I wrote about the Jenyus [`graphql-utils`](https://github.com/Jenyus-Org/graphql-utils/tree/master/graphql-utils) package on my [personal blog](https://ravianand.web.app/blog/graphql-utils), showing how we could leverage the GraphQL AST to optimize relational queries and avoid dataloaders entirely. Today we're going to look at how Jenyus uses the [`nestjs-graphql-utils`](https://github.com/Jenyus-Org/graphql-utils/tree/master/nestjs-graphql-utils) package we built on top of it to create scalable and performant APIs such as the one used in [Recog](https://github.com/Jenyus-Org/recog-api/).
 
 # The Problem
 
-🚧 Work in Progress!
+GraphQL provides a lot of flexibility for clients to request related data to an object in the same query. Whereas in REST you would make a request to the `/api/posts` endpoint, followed by `/api/users/:id` for each post, in GraphQL we can write a very concise query like so that achieves the same thing:
+
+```gql
+{
+  posts {
+    id
+    title
+    body
+    author {
+      id
+      username
+      firstName
+      lastName
+    }
+  }
+}
+```
+
+A barebones implementation of a GraphQL API here will first call the `posts` resolver, and then the `Post.author` resolver, wherein we would do another `SELECT` to our database to fetch each post's author. This can be somewhat optimized using dataloader, but it isn't perfect. You can read more about dataloader [here](https://github.com/graphql/dataloader).
+
+The reason this approach is flawed is because we still run individual queries for each post's author that our dataloader hasn't cached yet, which introduces a ton of latency and doesn't make use of SQL `JOIN`s for one-to-one relations.
 
 # Our Boilerplate
 
 We're going to be using the [Jenyus NestJS MikroORM Starter Template](https://github.com/Jenyus-Org/nestjs-auth-graphql-mikroorm-starter/) as our base to understand how we can use the `nestjs-graphql-utils` package in combination with a powerful ORM like MikroORM to optimize our SQL queries. You can learn more about this starter [here](https://jenyus.web.app/blog/2021-03-07-nestjs-starter).
 
-Once you have the boilerplate setup, you'll see the available relationships are already optimized using `nestjs-graphql-utils`. Today we're going to go over the implementation of the `Post.author` relationship, and a couple of alternative methods.
+Once you have the boilerplate setup, you'll see the available relationships are already optimized using `nestjs-graphql-utils`.
 
 ## The GraphQL Objects
 
@@ -56,7 +76,7 @@ export class PostObject {
 
 The reason we do not define the `Post.author` relationship in here is because we can do so directly in the `PostsResolver.author` field resolver. This is a method, which we will use to check if the author for the parent post has been already fetched, and as a fallback we can fetch the author directly from our database for deeper nested relationships or if the previous optimization fails.
 
-`src/posts/posts.resolver.ts`
+`src/posts/posts.resolver.ts`:
 
 ```ts
 @Resolver(() => PostObject)
@@ -76,13 +96,17 @@ export class PostsResolver {
 }
 ```
 
+# The Solution
+
+The goal now is to have post resolvers already become aware of when a client requests the author, in order to directly do a `JOIN` in our SQL query using MikroORM. We can do this using one of the many decorators provided by `nestjs-graphql-utils`.
+
 ## Using the GraphQL-Utils `@Selections()` Decorator
 
 The boilerplate uses the most straightforward approach with the `@Selections()` decorator. Given a parent field, and subselections, `graphql-utils` will recursively find all the selections that were made and return them as an array of strings. This is compatible with many ORMs such as TypeORM and MikroORM, making it very suited for this use-case.
 
 In our `PostsResolver.posts` and `post` query, we pass on the resolved selections to our `PostsService`, which relays that information to MikroORM in our case.
 
-`src/posts/posts.resolver.ts`
+`src/posts/posts.resolver.ts`:
 
 ```ts
 @Resolver(() => PostObject)
@@ -131,7 +155,7 @@ The `@HasFields()` decorator returns a boolean if it finds the fields in a given
 
 The functionality will overall be the same, we will check if the field was requested, and then add it to our `relations` array to let the service know the `author` needs to be populated as well.
 
-`src/posts/posts.resolver.ts`
+`src/posts/posts.resolver.ts`:
 
 ```ts
 @Resolver(() => PostObject)
@@ -160,7 +184,7 @@ export class PostsResolver {
 
 `@Fields()` returns an array of dot-notated strings, denoting which fields were selected in the query by the client. We can either use it like `@HasFields()` to check if the field we're trying to resolve was selected (`posts.author`) or create something more sophisticated that can resolve all our relationships. In our current schema we know, post relationships are simply fields that have nested selectors, so we can write a Javascript reducer to do just that.
 
-`src/posts/posts.resolver.ts`
+`src/posts/posts.resolver.ts`:
 
 ```ts
 @Resolver(() => PostObject)
@@ -196,7 +220,7 @@ Given all the utilities are built around it, it can also be used to optimize the
 
 To solve our current problem, all we need to do here is create a function that works in a similar fashion to the reducer used above, only this time we'll be checking if the object has any subselections instead of parsing the dot-notation, making it even more straightforward.
 
-`src/posts/posts.resolver.ts`
+`src/posts/posts.resolver.ts`:
 
 ```ts
 @Resolver(() => PostObject)
@@ -217,10 +241,8 @@ export class PostsResolver {
 }
 ```
 
-# The Solution
-
-🚧 Work in Progress!
-
 # Verdict
 
-🚧 Work in Progress!
+NestJS already allows us to write efficient and easy to understand GraphQL APIs using their unique module architecture and resolvers. Instead of using the generic dataloader method to cache results and mostly only optimize many-to-many relationships, we can leverage native features provided by SQL databases to decrease latency and improve mapping performance through our ORM.
+
+The Jenyus [`nestjs-graphql-utils`](https://github.com/Jenyus-Org/graphql-utils/tree/master/nestjs-graphql-utils) package is a great add-on for GraphQL codebases of any size, and offers a lot of versatility in its implementation. This guide should get you on the track of understanding the GraphQL system and what its capable of, so you can implement your own performant GraphQL APIs.
