@@ -163,38 +163,8 @@ const Navigation = () => {
             variants={navItem}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}>
-            <Link onClick={toggleOpen} to="/about-us">
-              About Us
-            </Link>
-          </motion.li>
-          <motion.li
-            className={clsx(
-              "menu-item",
-              "mb-4",
-              "text-2xl",
-              "font-title",
-              "w-auto",
-            )}
-            variants={navItem}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}>
-            <Link onClick={toggleOpen} to="/contact">
-              Contact Us
-            </Link>
-          </motion.li>
-          <motion.li
-            className={clsx(
-              "menu-item",
-              "mb-4",
-              "text-2xl",
-              "font-title",
-              "w-auto",
-            )}
-            variants={navItem}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}>
-            <Link onClick={toggleOpen} to="/faq">
-              FAQ
+            <Link onClick={toggleOpen} to="/blog">
+              Blog
             </Link>
           </motion.li>
         </motion.ul>
