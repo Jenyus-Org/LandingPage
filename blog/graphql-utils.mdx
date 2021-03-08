@@ -1,0 +1,226 @@
+---
+slug: graphql-utils
+title: How Jenyus Optimizes Relationships in GraphQL APIs
+topic: Backend
+description: Jenyus engineers developed a package for various implementations of GraphQL to optimize relational data queries in high-performance APIs.
+date: 2021-03-08
+tags:
+  - name: GraphQL
+    color: "#DE33A6"
+author:
+  name: RaviAnand Mohabir
+  tagline: Jenyus CTO & GraphQL Enthusiast
+  website: https://ravianand.web.app/
+  image: ../src/images/ravi_2_1_cropped_1.png
+  color: "#FEE4E4"
+featuredImage: ../images/graphql.png
+---
+
+A couple of weeks ago I wrote about the Jenyus `graphql-utils` package on my [personal blog](https://ravianand.web.app/blog/graphql-utils), showing how we could leverage the GraphQL AST to optimize relational queries and avoid dataloaders entirely. Today we're going to look at how Jenyus uses the `nestjs-graphql-utils` package we built on top of it to create scalable and performant APIs such as the one used in [Recog](https://github.com/Jenyus-Org/recog-api/).
+
+# The Problem
+
+🚧 Work in Progress!
+
+# Our Boilerplate
+
+We're going to be using the [Jenyus NestJS MikroORM Starter Template](https://github.com/Jenyus-Org/nestjs-auth-graphql-mikroorm-starter/) as our base to understand how we can use the `nestjs-graphql-utils` package in combination with a powerful ORM like MikroORM to optimize our SQL queries. You can learn more about this starter [here](https://jenyus.web.app/blog/2021-03-07-nestjs-starter).
+
+Once you have the boilerplate setup, you'll see the available relationships are already optimized using `nestjs-graphql-utils`. Today we're going to go over the implementation of the `Post.author` relationship, and a couple of alternative methods.
+
+## The GraphQL Objects
+
+Our `Post` entity is mapped to the GraphQL schema with our `PostObject` DTO. This allows us to independently define the fields from our post entity, which we want to expose. As you can see, though, we do not define the relationships in here.
+
+`src/posts/dto/post.object.ts`:
+
+```ts
+@ObjectType("Post")
+export class PostObject {
+  @Field(() => Int)
+  readonly id: number;
+
+  @Field()
+  readonly title: string;
+
+  @Field()
+  readonly body: string;
+
+  @Field()
+  readonly createdAt: Date;
+
+  @Field()
+  readonly updatedAt: Date;
+}
+```
+
+The reason we do not define the `Post.author` relationship in here is because we can do so directly in the `PostsResolver.author` field resolver. This is a method, which we will use to check if the author for the parent post has been already fetched, and as a fallback we can fetch the author directly from our database for deeper nested relationships or if the previous optimization fails.
+
+`src/posts/posts.resolver.ts`
+
+```ts
+@Resolver(() => PostObject)
+export class PostsResolver {
+  constructor(
+    private readonly postsService: PostsService,
+    private usersService: UsersService,
+  ) {}
+
+  @ResolveField(() => UserObject)
+  async author(@Parent() post: Post) {
+    if (post.author) {
+      return post.author;
+    }
+    return await this.usersService.findOne({ postId: post.id });
+  }
+}
+```
+
+## Using the GraphQL-Utils `@Selections()` Decorator
+
+The boilerplate uses the most straightforward approach with the `@Selections()` decorator. Given a parent field, and subselections, `graphql-utils` will recursively find all the selections that were made and return them as an array of strings. This is compatible with many ORMs such as TypeORM and MikroORM, making it very suited for this use-case.
+
+In our `PostsResolver.posts` and `post` query, we pass on the resolved selections to our `PostsService`, which relays that information to MikroORM in our case.
+
+`src/posts/posts.resolver.ts`
+
+```ts
+@Resolver(() => PostObject)
+export class PostsResolver {
+  constructor(
+    private readonly postsService: PostsService,
+    private usersService: UsersService,
+  ) {}
+
+  @Query(() => [PostObject])
+  posts(@Selections("posts", ["author"]) relations: string[]) {
+    return this.postsService.findAll({ relations });
+  }
+}
+```
+
+`src/posts/posts.service.ts`:
+
+```ts
+interface FindAllArgs {
+  relations?: string[];
+  authorId?: number;
+}
+
+@Injectable()
+export class PostsService {
+  constructor(
+    @InjectRepository(Post)
+    private postsRepository: EntityRepository<Post>,
+  ) {}
+
+  findAll(args?: FindAllArgs) {
+    const { relations, authorId } = args;
+    let where: FilterQuery<Post> = {};
+    if (authorId) {
+      where = { ...where, author: { id: authorId } };
+    }
+    return this.postsRepository.find(where, relations);
+  }
+}
+```
+
+## Using the GraphQL-Utils `@HasFields()` Decorator
+
+The `@HasFields()` decorator returns a boolean if it finds the fields in a given query. This can be useful if you want to run further checks, such as calculating complexity, which is a feature NestJS provides out of the box but you can also implement on your own if you want to avoid the overhead of separate packages or gain more control over the feature. You can read more about how NestJS can calculate query complexity [here](https://docs.nestjs.com/graphql/complexity).
+
+The functionality will overall be the same, we will check if the field was requested, and then add it to our `relations` array to let the service know the `author` needs to be populated as well.
+
+`src/posts/posts.resolver.ts`
+
+```ts
+@Resolver(() => PostObject)
+export class PostsResolver {
+  constructor(
+    private readonly postsService: PostsService,
+    private usersService: UsersService,
+  ) {}
+
+  @Query(() => [PostObject])
+  posts(@HasFields("posts.author") wantsAuthor: boolean) {
+    let relations: string[] = [];
+
+    if (wantsAuthor) {
+      relations = [...relations, "author"];
+    }
+
+    return this.postsService.findAll({ relations });
+  }
+}
+```
+
+## Using the GraphQL-Utils `@Fields()` Decorator
+
+`@Fields()` and `@FieldsMap()` (see below) can be extremely useful if you want to do many things with the GraphQL AST, and be as efficient as possible, since every time `@Selections()` or `@HasFields()` is called the entire AST needs to be recursively scanned, you can use the more raw approach to improve performance.
+
+`@Fields()` returns an array of dot-notated strings, denoting which fields were selected in the query by the client. We can either use it like `@HasFields()` to check if the field we're trying to resolve was selected (`posts.author`) or create something more sophisticated that can resolve all our relationships. In our current schema we know, post relationships are simply fields that have nested selectors, so we can write a Javascript reducer to do just that.
+
+`src/posts/posts.resolver.ts`
+
+```ts
+@Resolver(() => PostObject)
+export class PostsResolver {
+  constructor(
+    private readonly postsService: PostsService,
+    private usersService: UsersService,
+  ) {}
+
+  @Query(() => [PostObject])
+  posts(@Fields() fields: string[]) {
+    const relations: string[] = fields.reduce((fields, field) => {
+      // check if it's a relational field by checking if it has subselections
+      if (field.split(".").length > 2) {
+        // we need to check if the relation has already been added to our array
+        if (!fields.includes(field.split(".")[1])) {
+          return [...fields, field.split(".")[1]];
+        }
+      }
+      return fields;
+    }, []);
+
+    return this.postsService.findAll({ relations });
+  }
+}
+```
+
+## Using the GraphQL-Utils `@FieldMap()` Decorator
+
+`FieldMap` is the interface used throughout the `graphql-utils` library to make utilities like `hasFields()` and `resolveSelections()` possible. You can read more about it [here](https://github.com/Jenyus-Org/graphql-utils/tree/master/graphql-utils).
+
+Given all the utilities are built around it, it can also be used to optimize the way we work with the AST. `graphql-utils` provides many utilities that we can use to convert this into different data structures or filter certain items.
+
+To solve our current problem, all we need to do here is create a function that works in a similar fashion to the reducer used above, only this time we'll be checking if the object has any subselections instead of parsing the dot-notation, making it even more straightforward.
+
+`src/posts/posts.resolver.ts`
+
+```ts
+@Resolver(() => PostObject)
+export class PostsResolver {
+  constructor(
+    private readonly postsService: PostsService,
+    private usersService: UsersService,
+  ) {}
+
+  @Query(() => [PostObject])
+  posts(@FieldMap() fieldMap: FieldMap) {
+    const relations: string[] = Object.keys(fieldMap.posts).filter(
+      (key) => Object.keys(fieldMap.posts[key]).length,
+    );
+
+    return this.postsService.findAll({ relations });
+  }
+}
+```
+
+# The Solution
+
+🚧 Work in Progress!
+
+# Verdict
+
+🚧 Work in Progress!
