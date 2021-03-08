@@ -83,9 +83,9 @@ const Template = ({ data }) => {
               "rounded-full",
               "overflow-hidden",
               "ring-4",
-              "ring-red-100",
               "mr-4",
-            )}>
+            )}
+            style={{ "--tw-ring-color": frontmatter.author.color }}>
             <Img
               className={clsx("object-cover")}
               fluid={frontmatter.author.image.childImageSharp.fluid}
@@ -186,6 +186,7 @@ export const pageQuery = graphql`
               }
             }
           }
+          color
         }
         tags {
           name
