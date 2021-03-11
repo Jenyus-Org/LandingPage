@@ -1,0 +1,205 @@
+---
+slug: spesen-app
+title: Setting Up a VueJS Prototype with Bootstrap
+topic: Web Development
+description: Use the VueJS Framework to create a single page application for desktop as well as mobile usage.
+date: 2021-03-07
+tags:
+  - name: VueJS
+    color: "#42b983"
+  - name: Bootstrap
+    color: "#7952b3"
+author:
+  name: Dominik Berger
+  tagline: Jenyus CEO & Frontend Developer
+  website: https://doemuulive-56e78.web.app/
+  image: ../src/images/dominik.jpg
+  color: "#DBEAFE"
+featuredImage: "../images/vue-logo.png"
+---
+
+To implement a prototype project of the [Alte Kanti Aarau](https://altekanti.ch/), which should offer the school's teachers an efficient, easy-to-use application. This includes the use of the app on desktops, laptops and mobile phones.
+
+# What is VueJS?
+
+VueJs is a Javascript Framework to create, manage and deploy Single page applications. Vue, as it is also often referred to, is in contrast to other Javascript frameworks an easy to adopt, easy to expand on library. Its basis focuses on the frontend only and does not support a heavy backend or state management, but instead offers great support for the integration of the [Vuex](https://vuex.vuejs.org/) state manager and the [VueRouter](https://router.vuejs.org/) router packages, two of the must have packages for a bigger, more functional application.
+
+# What is Bootstrap?
+
+Bootsrap is a mobile first CSS component framework. It is widely accepted in the Webdev community as a support frontend toolkit. Its goal is to make the styling experience of a developer as short as possible, as it can act as a blackhole for time. Its predefined classes make styling much more intuitive, quick and modern looking.
+
+# Why VueJS?
+
+As the project is not a huge one, and needs to be setup and deployed as quickly as possible, we at Jenyus Org opted to create the prototype in Vue for many of the same reasons as listed above. This decision was not taken lightly as the Team has experience in coding with a variety of frameworks, yet we defined crucial requirements to be best fit with Vue such as:
+
+- Easy Prototyping
+
+In Vue it is especially easy to create prototypes. The [Spesen-App](https://jenyus.web.app/projects) is one of the projects, which first needed approval of the schools administrative board. This means we needed to create a prototype to showcase the superiority of the app asap.
+
+- Expandable
+
+As the requirements of the app were not fully defined at the start of development, it was especially important to us to choose a framework, which supports us in expanding the project.
+
+For these reasons we settled on using the VueJS framework for creating the [Alte Kanti Spesen-App](https://jenyus.web.app/projects). Both the Jenyus' CTO, RaviAnand Mohabir, and I enjoy coding in Vue, as it is intuitive and offers a calming experience in an otherwise hasty project.
+
+# Why Bootstrap?
+
+To know why Bootstrap is the superior styling framework in this context, it is important to recall, what the requirements of the project are.
+
+- Easy Prototyping
+
+Bootstrap has many ready-made components and supports creating good looking, modern styles in a matter of minutes.
+
+- Expandable
+
+By offering access to the Bootstrap classes the styles are in no way bound, and are replaced, added upon and removed as quickly as setup with Bootstrap.
+
+# Setting up the Boilerplate
+
+Vue is wonderful as the Vue CLI [Vue CLI](https://cli.vuejs.org/) can take care of creating a well setup, customised boilerplate. As is usual with Vue the CLI is highly intuitive.
+
+```bash
+vue create spesen-app
+```
+
+```bash
+ Please pick a preset:
+  Default ([Vue 2], babel, eslint)
+  Default (Vue 3 Preview) ([Vue 3], babel, eslint)
+> Manually select features
+```
+
+```bash
+ Please pick a preset: Manually select features
+ Check the features needed for your project:
+ (*) Choose Vue version
+ (*) Babel
+ ( ) Typescript
+ ( ) Progressive Web App (PWA) Support
+ ( ) Router
+ ( ) Vuex
+ ( ) CSS Pre-processors
+ (*) Linter / Formatter
+ ( ) Unit Testing
+ ( ) E2E Testing
+```
+
+Now the [Spesen-App](https://jenyus.web.app/projects) does not require specialties like Typescript, Unit Testing or E2E Testing as those plugins are overkill for a quickly needed solution like the [Spesen-App](https://jenyus.web.app/projects).
+
+As the [Spesen-App](https://jenyus.web.app/projects) is supposed to be a easy access, easy handle Application for the teachers of Alte Kanti. We will need the plugins Progressive Web App (PWA) Support, Router and Vuex, which sets up a nice boilerplate. An argument to be had is, if the CSS Pre-processors plugin should be added as well. We do not choose the plugin, as the node-sass plugin often has issues with Vue 2, the used Vue version for this project.
+
+All this could also be achieved by downloading the the plugins one by one and implementing the essentials by hand, but why take the hard way when the Vue CLI can do all that for us anyway.
+
+```bash
+ Please pick a preset: Manually select features
+ Check the features needed for your project:
+ (*) Choose Vue version
+ (*) Babel
+ ( ) Typescript
+ (*) Progressive Web App (PWA) Support
+ (*) Router
+ (*) Vuex
+ ( ) CSS Pre-processors
+ (*) Linter / Formatter
+ ( ) Unit Testing
+ ( ) E2E Testing
+```
+
+```bash
+ Please pick a preset: Manually select features
+ Check the features needed for your project:
+ Choose a version of Vue.js that you want to start the project with
+ 2.x
+ 3.x (Preview)
+```
+
+```bash
+ Please pick a preset: Manually select features
+ Check the features needed for your project:
+ Choose a version of Vue.js that you want to start the project with 2.x
+ Use history mode for router? (Requires proper server setup for index fallback in production) (Y/n)
+```
+
+The history mode of the [Vue Router](https://router.vuejs.org/) is required so the default hash mode is disabled. The hash mode reloads the page on url changes, which is highly unfavourable in combination with the [Vuex](https://vuex.vuejs.org/) store as the store refreshes on reloads as well. There is an issue with this kind of routing, as if there is no valid server configuration and the user opens a url indirectly, meaning by not building the route up from the index page, like by clicking on a link. The server interprets the link, which should in fact be correct and load, as a missing page and redirects on Error404.
+
+We now only need to add Bootstrap and we are done with the boilerplate. Even though Bootstrap is a CSS Framework, it needs source code to run, which is installable through the Node Package Manager (npm).
+
+```bash
+npm install vue bootstrap bootstrap-vue
+```
+
+Once installed the framework will need to be added to the boilerplate. Register the framework in the `main.js` file by adding this.
+
+```javascript
+import { BoostrapVue } from "bootstrap-vue";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+
+Vue.use(BootstrapVue);
+```
+
+# Project Setup
+
+The Node Package Manager (npm), as used for the installation of Bootstrap before, downloads packages which contain a lot of data, which would be hard to manage and implement without it. The problem is, as mentioned, are huge and can clog RAM for literal hours, when they are handled. To circumvent this issue npm writes the package names into a project file, specifically the `package.json`. When a new party receives this file the Manager will be able to read the required package names and download them on that party' computer.
+
+It is important when using the Node Package Manager (npm) with GitHub for anything, not just Vue, to always add the node-modules, which contain the downloaded code, to the `.gitignore`.
+
+The npm command to install these packages mentioned in the `package.json` file is:
+
+```bash
+npm install
+```
+
+It's time to start coding and using the boilerplate. As Vue is a Frontend Framework we highly advise on sketching at least some functionality before starting development. We use [Figma](https://www.figma.com/) to plan out detailed pages in mobile and desktop view.
+
+To not only have an easier time implementing but also have better Search Engine Optimisation (SEO), we also advise on starting implementation in mobile view.
+
+To have a live preview of the code we can use another npm command.
+
+```bash
+npm run serve
+```
+
+`npm run serve` opens a new localhost port and loads the website into it, making it a live preview. This is made exclusively for developers and should not be used to deploy the website.
+
+To deploy the website on a server npm thought of another command.
+
+```bash
+npm run build
+```
+
+The most obvious difference between the two is, that the `build` command does not open a localhost port and showcase the project. It instead reads all the installed packages and fully loads them instead of just tapping into them for the required information as `serve` does.
+
+Important to understand is, that these commands are utterly useless if not specified in the `package.json` file of the project. The good news is, by using the Vue CLI for the boilerplating, the file already contains these commands.
+
+As is implied by the need to specify, these commands are not by any means the only options a developer has. Check out the npm commands list for ideas.
+[NPM Commands](https://docs.npmjs.com/cli/v6/commands)
+
+# Project
+
+The best thing about using a design framework like Bootstrap is the intuitive way of implementing design ideas. There is no need to ever type out huge style classes, which in the end do not fit the design anyway anymore. Bootstrap supports every imaginable UI component to implement it directly in the page without writing a single line of CSS. But that is not all Bootstrap has to offer. Its utilities can also take away a huge junk of work.
+
+## Example
+
+A example of the implementation of a Bootstrap component, is the installation og the Button. In registering Bootstrap globally before, the basis is already set. We can simply access the libraries components.
+In the case of the button. The html looks as following:
+
+```html
+<b-button>Button</b-button>
+```
+
+Using the utilities is not as simple. It does not use a component but instead taps into the CSS of the specified component. We can do virtually everything regular CSS can do too but much more efficient, like for example this flex box with a padding of 2px and spread out content.
+
+```html
+<div class="d-flex p-2 justify-content-between">
+  <span>Hello</span>
+  <span>World</span>
+</div>
+```
+
+Bootstrap does have a good documentation on its own and is easy to navigate but for reference sake; [Components](https://getbootstrap.com/docs/4.5/components/alerts/), [Utilies](https://getbootstrap.com/docs/4.5/utilities/borders/)
+
+# Closing Words
+VueJS is a must know framework, as it is well supported by the community, easy to learn and intuitive too. Yet I do believe there are better options like React for bigger projects. This leaves Vue with a great niche. The small applications and those who focus on a quick deployment, such as the prototypes.
+
