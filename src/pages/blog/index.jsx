@@ -4,7 +4,7 @@ import { graphql, Link } from "gatsby";
 import Img from "gatsby-image";
 import queryString from "query-string";
 import * as React from "react";
-import { BsSearch } from "react-icons/bs";
+import { BsArrowLeftShort, BsSearch } from "react-icons/bs";
 import Layout from "../../components/layout";
 import SEO from "../../components/seo";
 
@@ -65,6 +65,25 @@ const BlogIndex = ({ data }) => {
           Blog
         </h1>
       </div>
+      {query.author && (
+        <div className={clsx("ml-12", "md:ml-16", "mb-6", "-mt-4")}>
+          <p>
+            Currently viewing posts by <b>{query.author}</b>
+          </p>
+          <Link
+            to="/blog"
+            className={clsx(
+              "flex",
+              "items-center",
+              "my-2",
+              "transition-colors",
+              "hover:text-red-500",
+            )}>
+            <BsArrowLeftShort />
+            <span className={clsx("ml-2")}>View all Posts</span>
+          </Link>
+        </div>
+      )}
       <div
         className={clsx(
           "px-4",
