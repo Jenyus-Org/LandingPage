@@ -1,12 +1,20 @@
+import { useLocation } from "@reach/router";
 import clsx from "clsx";
+import { graphql, Link } from "gatsby";
 import Img from "gatsby-image";
+import queryString from "query-string";
 import * as React from "react";
 import { BsSearch } from "react-icons/bs";
 import Layout from "../../components/layout";
 import SEO from "../../components/seo";
-import { graphql, Link } from "gatsby";
 
 const BlogIndex = ({ data }) => {
+  const location = useLocation();
+
+  const query = React.useMemo(() => queryString.parse(location.search), [
+    location,
+  ]);
+
   const {
     allMdx: { edges },
   } = data;
@@ -41,8 +49,11 @@ const BlogIndex = ({ data }) => {
               post.author.name.toLowerCase().indexOf(search.toLowerCase()) !==
                 -1
             : true,
+        )
+        .filter((post) =>
+          query.author ? post.author.name === query.author : true,
         ),
-    [edges, topicFilter, search],
+    [edges, topicFilter, search, query],
   );
 
   return (
