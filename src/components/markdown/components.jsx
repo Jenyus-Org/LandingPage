@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import * as React from "react";
 
-export const Paragraph = (props) => <p className={clsx("mb-2")} {...props} />;
+const Paragraph = (props) => <p className={clsx("mb-2")} {...props} />;
 
-export const Heading1 = (props) => (
+const Heading1 = (props) => (
   <h2
     className={clsx("text-2xl", "mt-8", "mb-2")}
     id={props.children}
@@ -11,25 +11,21 @@ export const Heading1 = (props) => (
   />
 );
 
-export const Heading2 = (props) => (
-  <h3 className={clsx("text-xl")} {...props} />
-);
+const Heading2 = (props) => <h3 className={clsx("text-xl")} {...props} />;
 
-export const Heading3 = (props) => (
-  <h4 className={clsx("text-lg")} {...props} />
-);
+const Heading3 = (props) => <h4 className={clsx("text-lg")} {...props} />;
 
-export const Heading4 = (props) => <h5 {...props} />;
+const Heading4 = (props) => <h5 {...props} />;
 
-export const Heading5 = (props) => <h6 {...props} />;
+const Heading5 = (props) => <h6 {...props} />;
 
-export const Heading6 = (props) => <p {...props} />;
+const Heading6 = (props) => <p {...props} />;
 
-export const List = (props) => (
+const List = (props) => (
   <ul className={clsx("list-disc", "list-inside", "mb-2")} {...props} />
 );
 
-export const Link = (props) => (
+const Link = (props) => (
   <a
     className={clsx(
       "underline",
@@ -42,10 +38,28 @@ export const Link = (props) => (
   />
 );
 
-export const InlineCode = (props) => (
+const InlineCode = (props) => (
   <code
     className={clsx("text-gray-700", "bg-gray-200", "rounded", "px-1")}
     {...props}></code>
+);
+
+const Blockquote = (props) => (
+  <blockquote
+    className={clsx(
+      "italic",
+      "border-l-2",
+      "border-gray-200",
+      "pl-3",
+      "my-8",
+      "ml-2",
+    )}
+    {...props}
+  />
+);
+
+const HorizontalRule = (props) => (
+  <hr className={clsx("border-gray-200", "my-3")} {...props} />
 );
 
 export default {
@@ -59,4 +73,6 @@ export default {
   ul: List,
   a: Link,
   inlineCode: InlineCode,
+  blockquote: Blockquote,
+  hr: HorizontalRule,
 };
