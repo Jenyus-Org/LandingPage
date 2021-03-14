@@ -194,7 +194,13 @@ const BlogIndex = ({ data }) => {
                   fluid={post.featuredImage.childImageSharp.fluid}
                 />
               </div>
-              <div className={clsx("flex", "uppercase", "text-gray-400")}>
+              <div
+                className={clsx(
+                  "flex",
+                  "uppercase",
+                  "text-gray-400",
+                  "flex-wrap",
+                )}>
                 <span>{post.formattedDate}</span>
                 <span className={clsx("mx-2", "font-bold")}>&middot;</span>
                 <span>{post.author.name}</span>
