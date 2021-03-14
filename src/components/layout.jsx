@@ -19,6 +19,7 @@ const Layout = ({ children }) => (
           "justify-between",
           "max-w-screen-lg",
           "mx-auto",
+          "items-start",
         )}>
         <Link to="/">
           <JenyusLogo className={clsx("h-36", "w-auto")} />
