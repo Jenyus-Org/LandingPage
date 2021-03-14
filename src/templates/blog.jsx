@@ -58,6 +58,7 @@ const Template = ({ data }) => {
         description={frontmatter.description}
         article
         image={frontmatter.featuredImage.childImageSharp.fixed.src}
+        keywords={frontmatter.tags.map((tag) => tag.name)}
       />
       <div
         className={clsx(
