@@ -91,7 +91,7 @@ const Template = ({ data }) => {
             {frontmatter.updatedAt && (
               <span className={clsx("text-gray-400", "italic")}>
                 <br />
-                Last updated at {frontmatter.date}.
+                Last updated at {frontmatter.updatedAt}.
               </span>
             )}
           </p>
