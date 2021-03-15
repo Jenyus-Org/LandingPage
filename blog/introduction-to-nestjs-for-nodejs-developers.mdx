@@ -4,6 +4,7 @@ title: Introduction to NestJS for NodeJS Developers
 topic: Backend
 description: See why you should use the NestJS framework to build your web APIs and the basic structure of a NestJS project.
 date: 2021-03-14
+updatedAt: 2021-03-15
 tags:
   - name: NestJS
     color: "#E1234E"
@@ -22,7 +23,7 @@ featuredImage: ../images/nestjs.png
 
 Users of frameworks like ExpressJS and Fastify probably are aware of one thing: There's a lot you need to do yourself before your project becomes scalable and easy to maintain in the future, but why are we still doing these things if there are already frameworks that can do them for us?
 
-The NestJS framework, which we will be going over today, solves all those things for you. We're going to see how we can use their CLI to setup a barebones REST and GraphQL API, and take a look at some of the features this framework offers.
+The NestJS framework, which we will be going over today, is an opinionated web framework that offers many built-in features out of the box or using integrations to make projects easier to maintan. We're going to see how we can use their CLI to setup a barebones REST and GraphQL API, and take a look at some of the features this framework offers.
 
 # What We'll Be Going Over Today
 
@@ -116,7 +117,7 @@ We also already went over the `main.ts` file when configuring the port that Nest
 
 ## NestJS Modules
 
-**Modules** are an essential building block of NestJS APIs. Imagine them as the glue between the services, controllers and other providers, as well as our main application. If we go back to our `main.ts` file, we'll see that NestJS creates our app using the `AppModule`, which is configured in the `src/app.module.ts` file.
+Modules are an essential building block of NestJS APIs. Imagine them as the glue between the services, controllers and other providers, as well as our main application. If we go back to our `main.ts` file, we'll see that NestJS creates our app using the `AppModule`, which is configured in the `src/app.module.ts` file.
 
 `src/main.ts`:
 
@@ -160,7 +161,7 @@ CREATE src/users/users.module.ts (82 bytes)
 UPDATE src/app.module.ts (312 bytes)
 ```
 
-In order for NestJS to become aware of this newly created module, we need to add it to the `AppModule`. `imports` is where we would add `UserModule`, but since we used the CLI NestJS already does this for us.
+In order for NestJS to become aware of this newly created module, we need to add it to the `AppModule`. `imports` is where we would add `UsersModule`, but since we used the CLI NestJS already does this for us.
 
 `src/app.module.ts`:
 
@@ -186,7 +187,7 @@ Now that we understand how modules work, and how to create a new one, it's time 
 
 **The Idea Behind Services**
 
-The service pattern is a very popular and fundamental design pattern in software architecture. Instead of putting our business logic right in the REST controllers we put them in services, in order to maintain the single-responsibility principle (SRP) and maintain the separation of concerns (SOC).
+The service pattern is a very popular and fundamental design pattern in software architecture. Instead of putting our business logic right in the REST controllers we put them in services, in order to maintain the single-responsibility principle (SRP) and maintain a strict separation of concerns (SOC).
 
 Imagine we change the way our data is stored, we switch to a different database or need to use a more efficient ORM, there is potential to have this logic scoured all over the place. By keeping things like this in our services, we'll have a much easier time making changes without breaking our controllers, and it comes with additional benefits. For instance while testing our application, we can provide NestJS with mock services, that do not interact with the database, but still provide our controllers with the expected results, to make sure everything works as it should.
 
@@ -197,12 +198,12 @@ When we bootstrapped our NestJS application, a service was created for us as wel
 `src/app.service.ts`:
 
 ```ts
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Hello World!';
+    return "Hello World!";
   }
 }
 ```
@@ -236,15 +237,15 @@ export class UsersModule {}
 
 ## NestJS Controllers
 
-Building REST APIs with NestJS controllers is an extremely intuitive process. Whereas in ExpressJS one would use routers to groupe route handlers, NestJS controllers let us define a root path, such as `/api/users`, and then create methods to handle individual routes. Just like ExpressJS it supports wildcard patterns to create a RESTful API.
+Building REST APIs with NestJS controllers is an extremely intuitive process. Whereas in ExpressJS one would use routers to group route handlers, NestJS controllers let us define a controller path, such as `/api/users`, and then create methods to handle individual routes. Just like ExpressJS it supports wildcard patterns to create a fully RESTful API.
 
 Let's take a look at the `AppController` NestJS made for us.
 
 `src/app.controller.ts`:
 
 ```ts
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get } from "@nestjs/common";
+import { AppService } from "./app.service";
 
 @Controller()
 export class AppController {
@@ -263,7 +264,7 @@ Our controller here is registered under the root path of our API. This means cal
 
 The `AppController` we just looked at above makes use of NestJS's intuitive dependency injection. As long as our module is aware of a provider, NestJS is able to inject these services into controllers, resolvers, and other services that may need them.
 
-By registering `AppService` in `AppModule` under the `providers`, NestJS is able to use our type-hint in the `AppController`'s controller to figure out what to inject.
+By registering `AppService` in `AppModule` under the `providers`, NestJS is able to use our type-hint in the `AppController`'s constructor to figure out what to inject.
 
 `src/app.controller.ts`:
 
@@ -300,7 +301,7 @@ Once again, NestJS didn't only create the resolver, but some testing files and u
 `src/users/users.resolver.ts`:
 
 ```ts
-import { Resolver } from '@nestjs/graphql';
+import { Resolver } from "@nestjs/graphql";
 
 @Resolver()
 export class UsersResolver {}
@@ -324,7 +325,7 @@ In this section we'll go over some of those integrations, and I'll provide you w
 
 ## Authentication
 
-Probably one of the most popular libraries in NodeJS is PassportJS. With over 1 million weekly downloads on [npm](https://www.npmjs.com/package/passport) it's the tried and tested authentication library Express-based web APIs and uses strategies to let you define your own methods of authentication.
+Probably one of the most popular libraries in NodeJS is PassportJS. With over 1 million weekly downloads on [npm](https://www.npmjs.com/package/passport) it's the tried and tested authentication library for Express-based web APIs and uses strategies to let you define your own methods of authentication.
 
 Whether you want to use OAuth, your own database, or a different solution, PassportJS most likely has you covered.
 
@@ -334,10 +335,11 @@ You can read more about configuring authentication with PassportJS in NestJS [he
 
 Once our database schema starts getting complex, and our models start introducing lots of relationships, writing SQL queries might not be as beneficial anymore. So NestJS provides a lot of integrations for popular ORMs, and there are also some third-party ORMs that provide their own integration for NestJS:
 
- - [TypeORM](https://docs.nestjs.com/techniques/database)
- - [Sequelize](https://docs.nestjs.com/techniques/database#sequelize-integration)
- - [Mongoose](https://docs.nestjs.com/techniques/mongodb)
- - [MikroORM](https://mikro-orm.io/docs/usage-with-nestjs/)
+- [TypeORM](https://docs.nestjs.com/techniques/database)
+- [Sequelize](https://docs.nestjs.com/techniques/database#sequelize-integration)
+- [Mongoose](https://docs.nestjs.com/techniques/mongodb)
+- [MikroORM](https://mikro-orm.io/docs/usage-with-nestjs/)
+- [Prisma](https://docs.nestjs.com/recipes/prisma)
 
 ## GraphQL
 
@@ -363,3 +365,5 @@ Have fun. 🙂
 
 - [Setting up a Hybrid REST & GraphQL API with NestJS and MikroORM](https://jenyus.web.app/blog/2021-03-07-nestjs-starter)
 - [NestJS Documentation](https://docs.nestjs.com/)
+- [NestJS: Introduction](https://dev.to/alvarotorresc/nestjs-introduction-ekd)
+- [Getting Started with NestJS | DigitalOcean](https://www.digitalocean.com/community/tutorials/getting-started-with-nestjs)
