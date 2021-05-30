@@ -188,7 +188,15 @@ const BlogIndex = ({ data }) => {
                 "transition-shadow",
                 "hover:shadow-lg",
               )}>
-              <div className={clsx("overflow-hidden", "mb-4", "h-52")}>
+              <div
+                className={clsx(
+                  "overflow-hidden",
+                  "mb-4",
+                  "h-52",
+                  "flex",
+                  "flex-col",
+                  "justify-center",
+                )}>
                 <Img
                   className={clsx("object-contain")}
                   fluid={post.featuredImage.childImageSharp.fluid}
