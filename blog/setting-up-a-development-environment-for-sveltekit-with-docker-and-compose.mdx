@@ -1,0 +1,163 @@
+---
+slug: setting-up-a-development-environment-for-sveltekit-with-docker-and-compose
+title: Setting up a development environment for SvelteKit with Docker and Docker Compose
+topic: DevOps
+description: Learn how to setup a SvelteKit development environment with Docker for predictable environments and easily adding more services to your web applications.
+date: 2021-05-30
+tags:
+  - name: SvelteKit
+    color: "#FF3E00"
+  - name: NodeJS
+    color: "#6FBC4F"
+  - name: Typescript
+    color: "#2391E6"
+author:
+  name: RaviAnand Mohabir
+  tagline: Jenyus CTO & Fullstack Developer
+  website: https://ravianand.web.app/
+  image: ../src/images/ravi_2_1_cropped_1.png
+  color: "#FEE4E4"
+featuredImage: ../images/docker-sveltekit-vite.png
+---
+
+Getting Docker working with frontend libraries like SvelteKit can sometimes be a pain. Hot-module reloading and the websocket connections require additional configurations to have the same experience as just running `npm run dev` or `yarn dev` on your local machine and SvelteKit's choice of a modern development server like Vite means there's more than ever to tweak for the perfect setup. Today we're going to go over the steps of creating a `Dockerfile` and `docker-compose` setup with SvelteKit and all the necessary configuration steps so you can use Docker in both development and production environments.
+
+# What is Docker, what is SvelteKit and why should I use them?
+
+Docker is a tool that solves a lot of common problems during development. Docker allows you to create containers that describe a virtual environment for your application to run, guaranteeing this environment will be identical no matter what kind of device you run your code on. Docker can also run on Linux, Windows with WSL and MacOS including the new M1 Macs, making it a great way to build your projects.
+
+With Docker Compose, another tool that helps you define multiple Docker containers to run in the same configuration, you can also add more services to your SvelteKit app, such as a backend, or load-balancer like nGinx to handle requests in production.
+
+SvelteKit is _the fastest way to build Svelte apps_ and brings together the benefits of Svelte and single-page applications, with those of static site generation and server-side rendered web applications for SEO and progressive enhancement. It offers a file-based routing system similar to Next.js, or Gatsby, and even its predecessor, Sapper.
+
+With SvelteKit you can create hybrid apps that combine the CSR, SSG and SSR paradigms, and even write API routes that are handled by the Node.js server if you're using the `adapter-node` adapter, or as serverless functions if you deploy to a platform such as **Vercel** or **Begin** using [the other available adapters](https://kit.svelte.dev/docs#adapters).
+
+There are already some great articles describing how to deploy your SvelteKit app to Docker in production such as [this blog post by Alexander Wolf](https://blog.alexanderwolf.tech/how-to-dockerize-your-sveltekit-app/), but today we'll be going over the development setup to get all the benefits of Docker while writing your next great app as well!
+
+# Going over the `Dockerfile.dev`
+
+The `Dockerfile` is where we define the configuration for our Docker container. This contains a base image, which will include certain tools we need for development, as well as commands to run to start the process. In this `Dockerfile` we can also specify environment variables and expose ports.
+
+In our `Dockerfile` we will first copy over all the `package.json` and lock files over to our Docker container. By splitting this step from copying over the main codebase we enable Docker to optimize building containers, which means it won't have to reinstall Node modules in the future as long as these files don't change.
+
+After that we can install our Node modules within the container and copy over our project files as well. After that it's as simple as exposing some ports from within the container and starting our app as we usually would with `yarn dev`.
+
+```dockerfile
+# Our Node base image
+FROM node:14.16.1
+
+# Set the Node environment to development to ensure all packages are installed
+ENV NODE_ENV development
+
+# Change our current working directory
+WORKDIR /usr/src/app
+
+# Copy over `package.json` and lock files to optimize the build process
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "yarn.lock", "./"]
+# Install Node modules
+RUN yarn
+
+# Copy over rest of the project files
+COPY . .
+
+# Expose port 3000 for the SvelteKit app and 24678 for Vite's HMR
+EXPOSE 3000
+EXPOSE 24678
+
+# Run `yarn dev` and set the host to 0.0.0.0 so we can access the web app from outside
+CMD ["yarn", "dev", "--host", "0.0.0.0"]
+```
+
+Important here is that we don't just run `yarn dev`, but since Docker maps container host names differently than our local machines do with `localhost`, we have to specify the `--host` argument and set it to `0.0.0.0`.
+
+[`Dockerfile` reference](https://docs.docker.com/engine/reference/builder/)
+
+# Docker Compose: Setting up `docker-compose.dev.yml`
+
+As I already mentioned, Docker Compose makes it easier for us to combine Docker containers and handle networking. But it also allows us to handle lots of configuration we would otherwise have to specify in the Docker CLI such as port mapping, volumes, etc. which is why it makes sense to use Docker Compose even for smaller setups.
+
+```yml
+version: "3.4"
+
+services:
+  client:
+    image: client
+    restart: on-failure
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3000:3000
+      - 24678:24678
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+```
+
+This is a very simple `docker-compose.dev.yml` file where we specify our SvelteKit client in `services`, and use the `ports` field to map ports from within the container to different locations on our `localhost`. In this case we keep them identical, but it's good to know that they can be remapped should you want to change them.
+
+Another very important part we do here is use volumes to map our local project folder to the `/usr/src/app` folder in the container, which we specified earlier to contain the project files in the Docker container. This tells Docker Compose to continuously mirror our local files in the container to ensure hot-module reloading works and we don't have to restart our container to see changes.
+
+We also specify the `/usr/src/app/node_modules` path as its own volume to avoid copying over local Node modules to Docker, so that if you're developing on Windows there are no issues with the Linux build of certain packages, since Docker uses Linux under the hood.
+
+Congrats! Now you can start Docker Compose and run all the containers you defined. Run the following command:
+
+```bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+Now head over to [`localhost:3000`](http://localhost:3000) to view your project. You should see your SvelteKit app running as if it was being ran on your local machine - because it is! Just in a Docker container.
+
+[Overview of Docker Compose](https://docs.docker.com/compose/)
+
+**Note:** Docker now features its own `compose` command to run the Docker Compose CLI as part of the Docker CLI. It still has some issues, though, in particular with using the `-f` flag to specify the Docker Compose file.
+
+# But wait! Where's my HMR?!
+
+As you probably noticed by now, hot-module reloading in SvelteKit with Vite doesn't actually work. This is because Vite uses Chokidar under the hood to watch files, and its default method of doing so doesn't work in Docker containers. In order to get it working, all you need to do is add the following config in `svelte.config.cjs`:
+
+```js
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  ...config,
+  kit: {
+    vite: {
+      server: {
+        watch: {
+          usePolling: true,
+        },
+      },
+    },
+  },
+};
+```
+
+Now it will use the slightly more expensive polling method to watch your files and reload your components whenever they change. Go ahead and exit from the previously started Docker Compose process and run `docker-compose -f docker-compose.dev.yml up --build` again to reload the changes.
+
+# Closing Words
+
+Now that you know how to setup SvelteKit in Docker for both production and development configs, you will have a much easier time developing your projects and then deploying them using the same toolkit. This comes with lots of benefits since it's very easy to move your development environment without any issues, and you get the benefits of spinning up a database using Docker Compose and using Docker's networking features to link it up to the SvelteKit app, or a custom backend.
+
+# Bonus
+
+If you want to change the websocket port Vite uses, you can modify the `server.hmr.port` configuration value in the `svelte.config.cjs` Vite config and then make sure to reflect those changes in `Dockerfile.dev` and `docker-compose.dev.yml` as well:
+
+```js
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  ...config,
+  kit: {
+    vite: {
+      server: {
+        hmr: {
+          port: 15319,
+        },
+      },
+    },
+  },
+};
+```
+
+# Mentions
+
+I'm the author of the [SvelteKitAuth](https://github.com/Dan6erbond/sk-auth) package, which is a library inspired by NextAuth.js to handle authentication in your SvelteKit apps. It features a zero restriction, fully-featured environment to get your authentication set-up using HTTP-Only Cookies and JWTs, and you should definitely check it out!
