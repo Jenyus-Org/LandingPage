@@ -4,7 +4,7 @@ title: How Jenyus Optimizes Relationships in GraphQL APIs
 topic: Backend
 description: See how Jenyus leverages the GraphQL AST using their own integration of GraphQL-Utils for the NestJS framework to optimize database queries with a declarative approach.
 date: 2021-03-08
-updatedAt: 2021-03-09
+updatedAt: 2021-07-02
 tags:
   - name: GraphQL
     color: "#DE33A6"
@@ -23,7 +23,7 @@ A couple of weeks ago I wrote about the Jenyus [`graphql-utils`](https://github.
 
 GraphQL provides a lot of flexibility for clients to request related data to an object in the same query. Whereas in REST you would make a request to the `/api/posts` endpoint, followed by `/api/users/:id` for each post, in GraphQL we can write a very concise query like so that achieves the same thing:
 
-```gql
+```
 {
   posts {
     id
