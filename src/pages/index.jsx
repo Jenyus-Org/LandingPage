@@ -24,13 +24,6 @@ const IndexPage = () => {
             }
           }
         }
-        raviImg: file(relativePath: { eq: "ravi_2_1_cropped_1.png" }) {
-          childImageSharp {
-            fluid(maxHeight: 450) {
-              ...GatsbyImageSharpFluid
-            }
-          }
-        }
       }
     `,
   );
@@ -198,54 +191,6 @@ const IndexPage = () => {
                 Dominik has written a dissertation on online marketing and SEO.
                 He is an avid React and C# developer and works on pretty much
                 any software idea that comes to his mind.
-              </p>
-            </div>
-          </div>
-          <div
-            className={clsx(
-              "flex",
-              "flex-col",
-              "rounded",
-              "shadow",
-              "py-4",
-              "px-8",
-              "items-center",
-              "justify-between",
-              "bg-red-50",
-            )}>
-            <div
-              className={clsx(
-                "inline-block",
-                "w-36",
-                "h-36",
-                "rounded-full",
-                "overflow-hidden",
-                "mb-4",
-                "ring-4",
-                "ring-red-100",
-              )}>
-              <Img
-                className={clsx("object-cover")}
-                fluid={raviImg?.childImageSharp.fluid}
-              />
-            </div>
-            <div className={clsx("text-center", "mb-6")}>
-              <span className={clsx("font-extrabold")}>RaviAnand</span>
-              <br />
-              <span>Mohabir</span>
-            </div>
-            <div className={clsx("w-full")}>
-              <span className={clsx("text-2xl")}>Developer</span>
-              <br />
-              <span>CTO</span>
-            </div>
-            <div className={clsx("my-auto")}></div>
-            <div>
-              <p>
-                RaviAnand is an experienced developer and expert at software
-                architecture and design. He is familiar with various
-                technologies and can help bring your next software project to
-                life in a professional manner.
               </p>
             </div>
           </div>
